@@ -1,0 +1,350 @@
+openapi: 3.0.3
+info:
+  title: AI Music Subtitles - OpenAPI 3.0
+  description: |-
+    AI Music to Subtitles API documentation
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: giacomo.cortesi1993@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: https://localhost:8000
+tags:
+  - name: job
+    description: Music AI subtitles generator jobs
+  - name: transcription
+    description: Transcription CRUD operations
+  - name: video
+    description: Video files CRUD operations
+paths:
+  /job:
+    post:
+      tags:
+        - job
+      summary: Create a new subtitles generation job
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobRequest'
+      responses:
+        '200':
+          description: Subtitles generation job successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobResponse'
+    get:
+      tags:
+        - job
+      summary: Get all job details
+      responses:
+        '200':
+          description: Jobs details successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JobResponse'
+  /job/{job_id}:
+    get:
+      tags:
+        - job
+      summary: Get job details
+      parameters:
+       - name: job_id
+         in: path
+         required: true
+         schema:
+          type: string
+      responses:
+        '200':
+          description: Job details successfully retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobResponse'
+  /transcription:
+    post:
+      tags:
+        - transcription
+      summary: Creates a new transcription
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  $ref: '#/components/schemas/TranscriptionData'
+                job_id:
+                  type: string
+      responses:
+        '200':
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transcription'
+    get:
+      tags:
+        - transcription
+      summary: Fetch all transcriptions
+      responses:
+        '200':
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                    $ref: '#/components/schemas/Transcription'
+  /transcription/{transcription_id}:
+    get:
+      tags:
+        - transcription
+      summary: Retrieves a specific transcription
+      parameters:
+        - name: transcription_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transcription'
+    delete:
+      tags:
+        - transcription
+      summary: Deletes a specific transcription
+      parameters:
+        - name: transcription_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: A successful response
+  /transcription/{transcription_id}/fix:
+    post:
+      tags:
+        - transcription
+      summary: Attempts to fix all subtitles text with AI
+      parameters:
+        - name: transcription_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: A successful response
+  /transcription/{transcription_id}/fit:
+    post:
+      tags:
+        - transcription
+      summary: Fit start and end of each subtitles segment
+      parameters:
+        - name: transcription_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: A successful response
+  /transcription/{transcription_id}/clear:
+    post:
+      tags:
+        - transcription
+      summary: Restores initial transcription
+      parameters:
+        - name: transcription_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: A successful response
+  /video:
+    post:
+      tags:
+        - video
+      summary: Uploads a video file
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: A successful response
+    delete:
+      tags:
+        - video
+      parameters:
+        - name: "filename"
+          in: "query"
+          description: "Filename of the video to be deleted, if no filename, all uploaded videos are deleted"
+          required: false
+          schema:
+            type: "string"
+      summary: Delete uploaded video file(s)
+      responses:
+        '200':
+          description: A successful response
+    get:
+      tags:
+        - video
+      summary: Retrieves the list of uploaded videos
+      responses:
+        '200':
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    video_id:
+                      type: string
+                    video_name:
+                      type: string
+                    upload_date:
+                      type: string
+                      format: date-time
+
+components:
+  schemas:
+    JobConfig:
+      type: object
+      properties:
+        model_size:
+          type: string
+        subtitles_frequency:
+          type: integer
+        language:
+          type: string
+        speaker_detection:
+          type: boolean
+        hugging_face_token:
+          type: string
+      required:
+        - model_size
+        - subtitles_frequency
+        - language
+        - speaker_detection
+        - hugging_face_token
+    JobRequest:
+      type: object
+      properties:
+        video_file:
+          type: string
+        config:
+          $ref: '#/components/schemas/JobConfig'
+      required:
+        - video_file
+    JobResponse:
+      type: object
+      properties:
+        video_file:
+          type: string
+        config:
+          $ref: '#/components/schemas/JobConfig'
+        status:
+          type: string
+          enum:
+            - pending
+            - running
+            - completed
+            - failed
+        data:
+          $ref: '#/components/schemas/TranscriptionData'
+      required:
+        - video_file
+        - config
+        - status
+        - transcription
+    Word:
+      type: object
+      properties:
+        word:
+          type: string
+        start:
+          type: number
+        end:
+          type: number
+        score:
+          type: number
+      required:
+        - word
+        - start
+        - end
+        - score
+    Segment:
+      type: object
+      properties:
+        start:
+          type: number
+          format: float
+        end:
+          type: number
+          format: float
+        text:
+          type: string
+        words:
+          type: array
+          items:
+            $ref: '#/components/schemas/Word'
+      required:
+        - start
+        - end
+        - text
+        - words
+    
+    Transcription:
+      type: object
+      properties:
+        transcription_id:
+          type: string
+        data:
+          $ref: '#/components/schemas/TranscriptionData'
+        job_id:
+          type: string
+        video_file:
+          type: string
+    TranscriptionData:
+      type: object
+      properties:
+        segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Segment'
+        word_segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Word'
+        language:
+          type: string
+      required:
+        - segments
