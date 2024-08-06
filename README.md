@@ -25,15 +25,15 @@ Main features:
  - docker/k8s deployment
  - settings editor for subtitles generation configuration (model size, speaker detection, etc.)
 
-## Run & Develop
-### UI
+# Run & Develop
+## UI
 ```bash
 cd ui
 npm install
 npm run dev
 ```
 
-### Backend
+## Backend
 Prerequisites:
  - install and start redis server (e.g. with [docker](https://hub.docker.com/_/redis/))
  - start redis queue worker process:
@@ -52,4 +52,23 @@ With Docker:
 cd be
 
 docker run --rm -v "${PWD}:/local"  -v /home/gcortesi/music-ai-sub/openapi.yml:/openapi.yml openapitools/openapi-generator-cli generate    -i /openapi.yml     -g python-flask     -o /local/
+```
+
+Check [selective-generation](https://openapi-generator.tech/docs/customization/#selective-generation) documentation to only select desired code generation pieces.
+
+### Testing
+Run all backend unit tests with pytest:
+```
+cd be
+pytest --cov=openapi_server
+```
+
+Selectively run tests with pytest:
+```
+pytest be/openapi_server/test/test_job_controller.py::TestJobController
+```
+
+Run all backend unit tests with tox:
+```
+tox run
 ```

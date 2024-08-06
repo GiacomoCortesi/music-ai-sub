@@ -10,10 +10,11 @@ werkzeug == 0.16.1; python_version=="3.5" or python_version=="3.4"
 swagger-ui-bundle >= 0.0.2
 python_dateutil >= 2.6.0
 setuptools >= 21.0.0
-Flask == 2.1.1
+Flask == 2.0.0
 
-spleeter
-whisperx
+numpy == 1.26.4
+spleeter == 2.4.0
+whisperx == 3.1.5
 torch
 moviepy
 rq

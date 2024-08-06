@@ -4,7 +4,7 @@ from flask import json
 
 from openapi_server.models.video_get200_response_inner import VideoGet200ResponseInner  # noqa: E501
 from openapi_server.test import BaseTestCase
-
+from unittest.mock import MagicMock
 
 class TestVideoController(BaseTestCase):
     """VideoController integration test stubs"""
@@ -17,6 +17,10 @@ class TestVideoController(BaseTestCase):
         headers = { 
             'Accept': 'application/json',
         }
+
+        vs = self.app.config["video_service"]
+        vs.get_with_url = MagicMock(return_value = [VideoGet200ResponseInner()])
+
         response = self.client.open(
             '/video',
             method='GET',

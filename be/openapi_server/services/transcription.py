@@ -1,6 +1,8 @@
 import requests
-import json
 import uuid
+
+class TranscriptionNotFoundException(Exception):
+    pass
 
 class TranscriptionService:
     def __init__(self, openai_token):
@@ -16,7 +18,10 @@ class TranscriptionService:
         return list(self.transcriptions.values())
 
     def get(self, transcription_id):
-        return self.transcriptions[transcription_id]
+        try:
+            return self.transcriptions[transcription_id]
+        except KeyError:
+            raise TranscriptionNotFoundException
 
     def edit(self, transcription_id, transcription):
         self.transcriptions[transcription_id]["data"] = transcription["data"]

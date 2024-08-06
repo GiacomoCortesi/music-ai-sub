@@ -8,6 +8,7 @@ from openapi_server.models.job_response import JobResponse  # noqa: E501
 from openapi_server import util
 
 from openapi_server.services.subtitle import SubtitleService
+from openapi_server.services.job import JobNotFoundException
 from flask import current_app
 
 from connexion.problem import problem
@@ -22,10 +23,7 @@ def job_get():  # noqa: E501
     """
     job_service =  current_app.config['job_service']
     jobs = job_service.get_all()
-    ret_jobs = []
-    for job in jobs:
-        ret_jobs.append({"job_id": job.get_id(), "data": job.result, "config":job_service.get_info(job.get_id()), "status": job.get_status()})
-    return ret_jobs, 200
+    return jobs, 200
 
 def job_job_id_get(job_id):  # noqa: E501
     """Get job details
@@ -38,12 +36,13 @@ def job_job_id_get(job_id):  # noqa: E501
     :rtype: Union[JobResponse, Tuple[JobResponse, int], Tuple[JobResponse, int, Dict[str, str]]
     """
     job_service =  current_app.config['job_service']
-    job = job_service.get(job_id)
-    if not job:
+    try:
+        job = job_service.get(job_id)
+    except JobNotFoundException:
         return problem(title="NotFound",
         detail="The requested job ID was not found on the server",
         status=404)
-    return {"job_id": job.get_id(), "data": job.result, "config":job_service.get_info(job.get_id()), "status": job.get_status()}
+    return job
 
 
 def job_post(job_request=None):  # noqa: E501
@@ -68,4 +67,4 @@ def job_post(job_request=None):  # noqa: E501
     # TODO: eventyally handle subtitle generation in the job runner with a specific task. Multiple jobs that depend on each other? (e.g. subtitle gen job depends on vocal extraction etc.)
     # job = job_service.run(job_config, subtitle_service.generate_subtitles, video["video_path"])
     job = job_service.run(job_info, subtitle_service.generate_subtitles_mock)
-    return {"job_id": job.get_id(), "data": {}, "config":job_service.get_info(job.get_id()), "status": "pending"}
+    return job
