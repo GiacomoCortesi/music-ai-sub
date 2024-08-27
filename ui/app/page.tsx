@@ -10,7 +10,7 @@ export default function Home() {
         <div className="h-full inline-block max-w-lg text-center justify-center">
           <h1 className={title()}>Music AI Subtitles</h1>
           <p className="text-lg">
-            Bla bla ... TODO
+            AI-Powered subtitle generator
           </p>
           <div className="flex justify-center gap-4 mt-6">
             <Link href="/converter" >
