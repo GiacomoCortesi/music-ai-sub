@@ -152,6 +152,33 @@ paths:
       tags:
       - transcription
       x-openapi-router-controller: openapi_server.controllers.transcription_controller
+    patch:
+      tags:
+        - transcription
+      summary: Edit a specific transcription
+      operationId: transcription_transcription_id_patch
+      parameters:
+      - explode: false
+        in: path
+        name: transcription_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  $ref: '#/components/schemas/TranscriptionData'
+      responses:
+        '204':
+          description: A successful response
+      x-openapi-router-controller: openapi_server.controllers.transcription_controller
+
   /transcription/{transcription_id}/clear:
     post:
       operationId: transcription_transcription_id_clear_post
@@ -438,7 +465,6 @@ components:
       - end
       - start
       - text
-      - words
       title: Segment
       type: object
     Transcription:

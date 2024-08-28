@@ -138,6 +138,28 @@ paths:
       responses:
         '204':
           description: A successful response
+    patch:
+      tags:
+        - transcription
+      summary: Edit a specific transcription
+      parameters:
+        - name: transcription_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  $ref: '#/components/schemas/TranscriptionData'
+      responses:
+        '204':
+          description: A successful response
   /transcription/{transcription_id}/fix:
     post:
       tags:
@@ -320,7 +342,6 @@ components:
         - start
         - end
         - text
-        - words
     
     Transcription:
       type: object

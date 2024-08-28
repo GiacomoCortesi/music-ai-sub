@@ -1,55 +1,99 @@
 "use client";
 
 import React from "react";
-import { debounce } from "lodash";
+import { useState, useEffect } from "react";
+import { Button } from "@nextui-org/button";
+
+import MagicButtons from "./magic-buttons";
 
 import { ISegment, IWord } from "@/types/transcription";
 import SubtitleSegment from "@/components/editor/subtitle-segment";
+import { editTranscription } from "@/actions/transcription";
 
 interface Props {
   language: string;
   segments: ISegment[];
-  word_segments: IWord[];
-  transcription_id: string;
-  job_id: string;
+  wordSegments: IWord[];
+  transcriptionId: string;
+  jobId: string;
 }
 
 export default function SubtitleEditor({
   language,
-  segments,
-  word_segments,
-  transcription_id,
-  job_id,
+  defaultSegments,
+  wordSegments,
+  transcriptionId,
+  jobId,
 }: Props) {
+  const [segments, setSegments] = useState<ISegment[]>(defaultSegments);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(async () => {
+      setIsSaving(true);
+      await editTranscription(transcriptionId, {
+        language: language,
+        segments: segments,
+        word_segments: wordSegments,
+      });
+      setIsSaving(false);
+    }, 5000); // Autosave after 5 seconds of inactivity
+
+    return () => clearTimeout(timeoutId);
+  }, [segments]);
+
+  // update subtitle segments everytime the defaultSegments props change (e.g. due to a Clear magic button click)
+  useEffect(() => {
+    const updateSegmentsOnPropsChange = () => {
+      setSegments(defaultSegments);
+    };
+
+    updateSegmentsOnPropsChange();
+  }, [defaultSegments]);
+
   const onTextHandler = (text: string, index: number) => {
     const newSegments = [...segments];
 
     newSegments[index].text = text;
-    console.log("updating segment text ", newSegments[index]);
+    setSegments(newSegments);
   };
   const onStartHandler = (start: number, index: number) => {
     const newSegments = [...segments];
 
-    newSegments[index].start = start;
-    console.log("updating segment start time ", newSegments[index]);
+    newSegments[index].start = Number(start);
+
+    setSegments(newSegments);
   };
   const onEndHandler = (end: number, index: number) => {
-    newSegments[index].end = end;
-    console.log("updating segment end time ", newSegments[index]);
+    const newSegments = [...segments];
+
+    newSegments[index].end = Number(end);
+    setSegments(newSegments);
   };
   const onDeleteHandler = (index: number) => {
     const newSegments = [...segments];
 
     newSegments.splice(index, 1);
-    console.log("deleting segment ", newSegments[index]);
+    setSegments(newSegments);
   };
 
-  const debouncedTextHandler = debounce(onTextHandler, 1000);
-  const debouncedStartHandler = debounce(onStartHandler, 1000);
-  const debouncedEndHandler = debounce(onEndHandler, 1000);
+  const onClearHandler = () => {
+    // setSegments(defaultSegments);
+  };
 
   return (
     <div className="flex flex-col gap-4">
+      <Button
+        className="my-2"
+        color="secondary"
+        onClick={editTranscription.bind(null, transcriptionId, {
+          language: language,
+          segments: segments,
+          word_segments: wordSegments,
+        })}
+      >
+        SAVE
+      </Button>
       {<p className="text-lg">Language: {language}</p>}
       {segments.map((segment: ISegment, index: number) => {
         return (
@@ -59,12 +103,16 @@ export default function SubtitleEditor({
             start={segment.start}
             text={segment.text}
             onDelete={() => onDeleteHandler(index)}
-            onEnd={(end: number) => debouncedEndHandler(end, index)}
-            onStart={(start: number) => debouncedStartHandler(start, index)}
-            onText={(text: string) => debouncedTextHandler(text, index)}
+            onEnd={(end: number) => onEndHandler(end, index)}
+            onStart={(start: number) => onStartHandler(start, index)}
+            onText={(text: string) => onTextHandler(text, index)}
           />
         );
       })}
+      <MagicButtons
+        transcriptionId={transcriptionId}
+        onClear={onClearHandler}
+      />
     </div>
   );
 }

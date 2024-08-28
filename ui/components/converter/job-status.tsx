@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import createTranscription from "@/actions/transcription";
+import { createTranscription } from "@/actions/transcription";
 
 export default function JobStatus({ jobId, onStatusChange }) {
   const router = useRouter();

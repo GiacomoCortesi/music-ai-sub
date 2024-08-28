@@ -8,12 +8,16 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  getKeyValue,
 } from "@nextui-org/table";
 import { Tooltip } from "@nextui-org/tooltip";
-import { AiFillEdit, AiFillEye, AiFillDelete } from "react-icons/ai";
+import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import { useCallback } from "react";
-export default function TranscriptionTable({ transcriptions }) {
+
+import { ITranscription } from "@/types/transcription";
+import { deleteTranscription } from "@/actions/transcription";
+export default function TranscriptionTable({
+  transcriptions,
+}: ITranscription[]) {
   let rows = [];
   const router = useRouter();
 
@@ -52,11 +56,6 @@ export default function TranscriptionTable({ transcriptions }) {
       case "actions":
         return (
           <div className="relative flex items-center gap-2">
-            <Tooltip content="Details">
-              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                <AiFillEye />
-              </span>
-            </Tooltip>
             <Tooltip content="Edit transcription">
               <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
                 <AiFillEdit
@@ -70,7 +69,12 @@ export default function TranscriptionTable({ transcriptions }) {
             </Tooltip>
             <Tooltip color="danger" content="Delete transcription">
               <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                <AiFillDelete />
+                <AiFillDelete
+                  onClick={deleteTranscription.bind(
+                    null,
+                    transcriptions[index]?.transcription_id
+                  )}
+                />
               </span>
             </Tooltip>
           </div>
@@ -81,19 +85,27 @@ export default function TranscriptionTable({ transcriptions }) {
   }, []);
 
   return (
-    <Table removeWrapper aria-label="Example static collection table">
-      <TableHeader columns={columns}>
-        {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
-      </TableHeader>
-      <TableBody items={rows}>
-        {(item) => (
-          <TableRow key={item.key}>
-            {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey, item.key)}</TableCell>
+    <>
+      {transcriptions.length ? (
+        <Table removeWrapper aria-label="Example static collection table">
+          <TableHeader columns={columns}>
+            {(column) => (
+              <TableColumn key={column.key}>{column.label}</TableColumn>
             )}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+          </TableHeader>
+          <TableBody items={rows}>
+            {(item) => (
+              <TableRow key={item.key}>
+                {(columnKey) => (
+                  <TableCell>{renderCell(item, columnKey, item.key)}</TableCell>
+                )}
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      ) : (
+        <p>No trascription available yet</p>
+      )}
+    </>
   );
 }

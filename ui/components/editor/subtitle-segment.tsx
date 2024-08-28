@@ -2,8 +2,8 @@
 
 import React from "react";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
-import { Button } from "@nextui-org/button";
 import { Textarea } from "@nextui-org/input";
+import { AiFillCloseCircle } from "react-icons/ai";
 
 import SubtitleSegmentCounter from "./subtitle-segment-counter";
 
@@ -21,28 +21,32 @@ export default function SubtitleSegment({
   onEnd,
   onText,
   onDelete,
-}) {
+}: Props) {
   return (
     <Card>
-      <CardHeader className="flex gap-3">
-        <Button onClick={() => onDelete()}>Delete</Button>
-      </CardHeader>
+      {
+        <CardHeader className="flex gap-3">
+          <button
+            className="absolute top-0 right-0 m-1 z-10 focus:outline-none"
+            onClick={() => onDelete()}
+          >
+            <AiFillCloseCircle size={20} />
+          </button>
+        </CardHeader>
+      }
       <CardBody className="flex-row gap-4">
         <div>
           <SubtitleSegmentCounter
             label={"Start"}
-            placeholder={start}
+            value={start}
             onChange={() => onStart(event?.target.value)}
           />
         </div>
-        <Textarea
-          defaultValue={text}
-          onChange={() => onText(event?.target.value)}
-        />
+        <Textarea value={text} onChange={() => onText(event?.target.value)} />
         <div>
           <SubtitleSegmentCounter
             label={"End"}
-            placeholder={end}
+            value={end}
             onChange={() => onEnd(event?.target.value)}
           />
         </div>

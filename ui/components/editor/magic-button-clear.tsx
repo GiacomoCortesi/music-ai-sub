@@ -2,19 +2,25 @@
 
 import { Button } from "@nextui-org/button";
 import { AiOutlineClear } from "react-icons/ai";
+import { useState } from "react";
+
+import { clearTranscription } from "@/actions/transcription";
+
 export default function MagicButtonClear({ transcriptionId }) {
-  const onClick = () => {
-    // TODO: send POST request to /clear endpoint
-    console.log("TODO: send POST request to /clear endpoint");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onClick = async () => {
+    setIsLoading(true);
+    await clearTranscriptionWithId();
+    setIsLoading(false);
   };
+  const clearTranscriptionWithId = clearTranscription.bind(
+    null,
+    transcriptionId,
+  );
 
   return (
-    <Button
-      color="primary"
-      onClick={() => {
-        onClick();
-      }}
-    >
+    <Button color="primary" isLoading={isLoading} onClick={onClick}>
       <AiOutlineClear />
       CLEAR
     </Button>

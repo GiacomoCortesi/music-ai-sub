@@ -8,7 +8,7 @@ export default function ConverterPage({ searchParams }) {
       <p className="text-lg">
         Instantly create and edit subtitles from a music video
       </p>
-      <Converter searchParams={searchParams}/>
+      <Converter searchParams={searchParams} />
     </>
   );
 }

@@ -1,3 +1,4 @@
+export const fetchCache = "force-no-store";
 // need to use client component because of: https://github.com/nextui-org/nextui/issues/1342
 import TranscriptionTable from "@/components/transcription-table";
 export default async function EditorPage() {

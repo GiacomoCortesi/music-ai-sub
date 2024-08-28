@@ -7,7 +7,7 @@ from openapi_server.models.transcription_post200_response import TranscriptionPo
 from openapi_server.models.transcription_post_request import TranscriptionPostRequest  # noqa: E501
 from openapi_server import util
 from flask import current_app
-
+import copy
 from connexion.problem import problem
 from openapi_server.services.transcription import TranscriptionNotFoundException
 
@@ -54,7 +54,6 @@ def transcription_transcription_id_clear_post(transcription_id):  # noqa: E501
 
     :rtype: Union[None, Tuple[None, int], Tuple[None, int, Dict[str, str]]
     """
-    job_service =  current_app.config['job_service']
     transcription_service =  current_app.config['transcription_service']
     try:
         current_transcription = transcription_service.get(transcription_id)
@@ -62,8 +61,7 @@ def transcription_transcription_id_clear_post(transcription_id):  # noqa: E501
         return problem(title="NotFound",
         detail="The requested transcription ID was not found on the server",
         status=404)
-    original_transcription = job_service.get(current_transcription["job_id"])["data"]
-    transcription_service.edit(transcription_id, original_transcription)
+    transcription_service.edit(transcription_id, copy.deepcopy(current_transcription.get("original_data", {})))
 
 def transcription_transcription_id_delete(transcription_id):  # noqa: E501
     """Deletes a specific transcription
@@ -76,7 +74,27 @@ def transcription_transcription_id_delete(transcription_id):  # noqa: E501
     :rtype: Union[None, Tuple[None, int], Tuple[None, int, Dict[str, str]]
     """
     transcription_service =  current_app.config['transcription_service']
-    transcription_service.delete(transcription_id)
+    try:
+        transcription_service.delete(transcription_id)
+    except TranscriptionNotFoundException:
+        return problem(title="NotFound",
+        detail="The requested transcription ID was not found on the server",
+        status=404)
+
+def transcription_transcription_id_patch(transcription_id, body):  # noqa: E501
+    """Edit a specific transcription
+
+     # noqa: E501
+
+    :param transcription_id: 
+    :type transcription_id: str
+
+    :rtype: Union[None, Tuple[None, int], Tuple[None, int, Dict[str, str]]
+    """
+    if connexion.request.is_json:
+        body = TranscriptionPostRequest.from_dict(connexion.request.get_json())  # noqa: E501
+    transcription_service =  current_app.config['transcription_service']
+    transcription_service.edit(transcription_id, body.to_dict()["data"])
 
 def transcription_transcription_id_fit_post(transcription_id):  # noqa: E501
     """Fit start and end of each subtitles segment
@@ -121,4 +139,5 @@ def transcription_transcription_id_get(transcription_id):  # noqa: E501
         return problem(title="NotFound",
         detail="The requested transcription ID was not found on the server",
         status=404)
+
     return transcription

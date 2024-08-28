@@ -5,10 +5,6 @@ export const siteConfig = {
   description: "Convert music videos into subtitles through the power of AI",
   navItems: [
     {
-      label: "Home",
-      href: "/",
-    },
-    {
       label: "Converter",
       href: "/converter",
     },

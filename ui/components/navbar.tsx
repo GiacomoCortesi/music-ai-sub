@@ -14,10 +14,8 @@ import NextLink from "next/link";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import {
-  GithubIcon,
-} from "@/components/icons";
 
+import { GithubIcon } from "@/components/icons";
 import { usePathname } from "next/navigation";
 import React from "react";
 
