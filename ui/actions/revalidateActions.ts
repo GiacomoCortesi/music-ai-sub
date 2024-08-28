@@ -1,7 +1,15 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
-export default async function revalidateVideoFiles() {
+export async function revalidateVideoFiles() {
   revalidateTag("uploaded_video_files");
+}
+
+export async function revalidateTranscription(transcriptionId) {
+  revalidatePath(`/transcription/${transcriptionId}`);
+}
+
+export async function revalidateTranscriptions() {
+  revalidatePath(`/transcription`);
 }

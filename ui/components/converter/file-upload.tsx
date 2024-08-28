@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import revalidateVideoFiles from "@/actions/revalidateActions";
+import { revalidateVideoFiles } from "@/actions/revalidateActions";
 
 export default function FileUpload() {
   const [file, setFile] = useState<File>();

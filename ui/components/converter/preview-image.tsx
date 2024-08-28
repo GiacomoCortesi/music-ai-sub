@@ -5,7 +5,6 @@ import { useState } from "react";
 import { AiFillCloseCircle } from "react-icons/ai";
 
 import deleteVideo from "@/actions/video";
-import revalidateVideoFiles from "@/actions/revalidateActions";
 
 export default function PreviewImage({
   isSelected,
@@ -19,7 +18,6 @@ export default function PreviewImage({
 
   const onDeleteButtonClick = () => {
     deleteVideoWithName();
-    revalidateVideoFiles();
   };
 
   return (

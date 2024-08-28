@@ -38,15 +38,10 @@ class TestTranscriptionController(BaseTestCase):
         headers = { 
         }
 
-        js = self.app.config['job_service']
         ts = self.app.config['transcription_service']
 
         ts.get = MagicMock(return_value = {"data": {}, "job_id": "job_id"})
         ts.edit = MagicMock(return_value = None)
-        js.get = MagicMock(return_value = {"job_id": "job_id",
-                "data": {}, 
-                "config": {}, 
-                "status": "pending"})
 
         response = self.client.open(
             '/transcription/{transcription_id}/clear'.format(transcription_id='transcription_id_example'),

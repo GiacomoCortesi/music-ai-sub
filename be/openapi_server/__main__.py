@@ -13,7 +13,7 @@ def main():
 
     # disable CORS for all endpoints
     # specify allowed origins for more secure configuration
-    CORS(app.app, methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"], send_wildcard=True)
+    CORS(app.app, methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"], send_wildcard=True)
 
     host = '0.0.0.0'
     port = 8080

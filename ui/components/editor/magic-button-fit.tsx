@@ -1,15 +1,24 @@
 "use client";
 import { Button } from "@nextui-org/button";
 import { AiOutlineAlignCenter } from "react-icons/ai";
-export default function MagicButtonFit({ transcription_id }) {
-  const onClick = () => {
-    // TODO: send POST request to /fit endpoint
-    console.log("TODO: send POST request to /fit endpoint");
+import { useState } from "react";
+
+import { fitTranscription } from "@/actions/transcription";
+
+export default function MagicButtonFit({ transcriptionId }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const onClick = async () => {
+    setIsLoading(true);
+    await fitTranscriptionWithId();
+    setIsLoading(false);
   };
+
+  const fitTranscriptionWithId = fitTranscription.bind(null, transcriptionId);
 
   return (
     <Button
       color="primary"
+      isLoading={isLoading}
       onClick={() => {
         onClick();
       }}

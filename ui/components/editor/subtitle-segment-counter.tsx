@@ -3,11 +3,7 @@
 import React from "react";
 import { Input } from "@nextui-org/input";
 
-export default function SubtitleSegmentCounter({
-  label,
-  placeholder,
-  onChange,
-}) {
+export default function SubtitleSegmentCounter({ label, value, onChange }) {
   return (
     <Input
       endContent={
@@ -17,8 +13,8 @@ export default function SubtitleSegmentCounter({
       }
       label={label}
       labelPlacement="outside"
-      placeholder={placeholder}
       type="number"
+      value={value}
       onChange={onChange}
     />
   );

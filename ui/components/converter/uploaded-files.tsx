@@ -9,7 +9,6 @@ export default function UploadedFiles({ uploaded_video_files }) {
   const pathName = usePathname();
   const handleClick = (video) => {
     setSelectedVideo(video);
-    console.log("clicked ", video);
     // Update the URL's search parameters
     const newSearchParams = new URLSearchParams(router.query);
 
