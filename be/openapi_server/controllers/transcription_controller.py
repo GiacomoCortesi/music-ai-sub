@@ -10,6 +10,9 @@ from flask import current_app
 import copy
 from connexion.problem import problem
 from openapi_server.services.transcription import TranscriptionNotFoundException
+from flask import send_file
+import io
+from connexion import request
 
 def transcription_get():  # noqa: E501
     """Fetch all transcriptions
@@ -86,8 +89,10 @@ def transcription_transcription_id_patch(transcription_id, body):  # noqa: E501
 
      # noqa: E501
 
-    :param transcription_id: 
+    :param transcription_id:
     :type transcription_id: str
+    :param transcription_transcription_id_patch_request:
+    :type transcription_transcription_id_patch_request: dict | bytes
 
     :rtype: Union[None, Tuple[None, int], Tuple[None, int, Dict[str, str]]
     """
@@ -141,3 +146,37 @@ def transcription_transcription_id_get(transcription_id):  # noqa: E501
         status=404)
 
     return transcription
+
+def transcription_transcription_id_export_get(transcription_id, format=None):  # noqa: E501
+    """Export transcription in several subtitle formats
+
+     # noqa: E501
+
+    :param transcription_id:
+    :type transcription_id: str
+    :param format: The format to export the transcription in
+    :type format: str
+
+    :rtype: Union[file, Tuple[file, int], Tuple[file, int, Dict[str, str]]
+    """
+    transcription_service =  current_app.config['transcription_service']
+    content=""
+    # needed because of https://github.com/spec-first/connexion/issues/1291
+    format = request.args["format"]
+    
+    try:
+        if format == "stt":
+            content = transcription_service.create_stt(transcription_id)
+            filename=f"{transcription_id}.stt"
+        elif format =="srt" or format == None:
+            content = transcription_service.create_srt(transcription_id)
+            filename=f"{transcription_id}.srt"
+        else:
+            return problem(title="BadRequest", detail="Unsupported export format", status=400)
+    except TranscriptionNotFoundException:
+        return problem(title="NotFound",
+        detail="The requested transcription ID was not found on the server",
+        status=404)
+    return send_file(io.BytesIO(content.encode()), attachment_filename=filename, as_attachment=True)
+    
+

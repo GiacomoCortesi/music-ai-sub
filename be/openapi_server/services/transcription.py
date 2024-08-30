@@ -2,6 +2,7 @@ import requests
 import uuid
 import json
 import copy
+from datetime import timedelta
 
 class TranscriptionNotFoundException(Exception):
     pass
@@ -90,4 +91,31 @@ class TranscriptionService:
                 transcription["data"]["segments"][index]["text"] = segment["text"]
         
         self.edit(transcription_id, transcription["data"])
+    
+    def create_stt(self, transcription_id):
+        transcription = self.get(transcription_id)
+        stt_content = ""
+        for index, segment in enumerate(transcription["data"]["segments"]):
+            start_time = self.format_time(segment["start"])
+            end_time = self.format_time(segment["end"])
+            text = segment["text"]
+            stt_content += f"{index}\n{start_time} --> {end_time}\n{text}\n\n"
+        
+        return stt_content
+            
+    def create_srt(self, transcription_id):
+        transcription = self.get(transcription_id)
+        srt_content = ""
+        for index, segment in enumerate(transcription["data"]["segments"]):
+            start_time = self.format_time(segment["start"])
+            end_time = self.format_time(segment["end"])
+            text = segment["text"]
+            srt_content += f"{index + 1}\n{start_time} --> {end_time}\n{text}\n\n"
+        
+        return srt_content
+    
+    @staticmethod
+    def format_time(seconds):
+        td = timedelta(seconds=seconds)
+        return str(td)[:-3].replace('.', ',')
         

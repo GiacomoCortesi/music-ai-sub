@@ -10,7 +10,7 @@ export default function MagicButtons({ transcriptionId }) {
       <MagicButtonFit transcriptionId={transcriptionId} />
       <MagicButtonFix transcriptionId={transcriptionId} />
       <MagicButtonClear transcriptionId={transcriptionId} />
-      <MagicButtonExport />
+      <MagicButtonExport transcriptionId={transcriptionId} />
     </div>
   );
 }

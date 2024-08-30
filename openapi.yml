@@ -202,6 +202,42 @@ paths:
       responses:
         '204':
           description: A successful response
+  /transcription/{transcription_id}/export:
+    get:
+      tags:
+        - transcription
+      summary: Export transcription in several subtitle formats
+      parameters:
+        - name: transcription_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: "format"
+          in: "query"
+          description: "The format to export the transcription in"
+          required: false
+          schema:
+            type: "string"    
+            enum: [srt, stt]
+      responses:
+        '200':
+          description: Successful export
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Unsupported format
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unsupported format          
   /video:
     post:
       tags:
@@ -342,7 +378,7 @@ components:
         - start
         - end
         - text
-    
+
     Transcription:
       type: object
       properties:
