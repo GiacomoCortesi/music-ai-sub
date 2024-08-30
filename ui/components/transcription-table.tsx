@@ -61,7 +61,7 @@ export default function TranscriptionTable({
                 <AiFillEdit
                   onClick={() => {
                     router.push(
-                      `/transcription/${transcriptions[index]?.transcription_id}`
+                      `/transcription/${transcriptions[index]?.transcription_id}`,
                     );
                   }}
                 />
@@ -72,7 +72,7 @@ export default function TranscriptionTable({
                 <AiFillDelete
                   onClick={deleteTranscription.bind(
                     null,
-                    transcriptions[index]?.transcription_id
+                    transcriptions[index]?.transcription_id,
                   )}
                 />
               </span>

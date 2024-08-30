@@ -16,15 +16,6 @@ Main features:
  - redis queue for generation jobs management
  - smart subtitles editor
 
-### TODOs:
- - job/transcription data persistence
- - UI - edit/delete/details button implementation
- - UI - fit/fix/clear/export button implementation
- - unit tests
- - user authentication/management
- - docker/k8s deployment
- - settings editor for subtitles generation configuration (model size, speaker detection, etc.)
-
 # Run & Develop
 ## UI
 ```bash
@@ -55,6 +46,10 @@ docker run --rm -v "${PWD}:/local"  -v /home/gcortesi/music-ai-sub/openapi.yml:/
 ```
 
 Check [selective-generation](https://openapi-generator.tech/docs/customization/#selective-generation) documentation to only select desired code generation pieces.
+
+The project use .openapi-generator-ignore to selectively exclude files from generation.  
+By default only the openapi spec and the models are regenerated, make sure to tweak the file as needed before regenerating
+code stubs.
 
 ### Testing
 Run all backend unit tests with pytest:

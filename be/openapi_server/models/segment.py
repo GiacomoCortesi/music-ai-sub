@@ -143,7 +143,5 @@ class Segment(Model):
         :param words: The words of this Segment.
         :type words: List[Word]
         """
-        if words is None:
-            raise ValueError("Invalid value for `words`, must not be `None`")  # noqa: E501
 
         self._words = words

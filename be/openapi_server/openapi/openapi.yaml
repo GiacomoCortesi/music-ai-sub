@@ -153,9 +153,6 @@ paths:
       - transcription
       x-openapi-router-controller: openapi_server.controllers.transcription_controller
     patch:
-      tags:
-        - transcription
-      summary: Edit a specific transcription
       operationId: transcription_transcription_id_patch
       parameters:
       - explode: false
@@ -166,19 +163,18 @@ paths:
           type: string
         style: simple
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                data:
-                  $ref: '#/components/schemas/TranscriptionData'
+              $ref: '#/components/schemas/_transcription__transcription_id__patch_request'
+        required: true
       responses:
-        '204':
+        "204":
           description: A successful response
+      summary: Edit a specific transcription
+      tags:
+      - transcription
       x-openapi-router-controller: openapi_server.controllers.transcription_controller
-
   /transcription/{transcription_id}/clear:
     post:
       operationId: transcription_transcription_id_clear_post
@@ -194,6 +190,46 @@ paths:
         "204":
           description: A successful response
       summary: Restores initial transcription
+      tags:
+      - transcription
+      x-openapi-router-controller: openapi_server.controllers.transcription_controller
+  /transcription/{transcription_id}/export:
+    get:
+      operationId: transcription_transcription_id_export_get
+      parameters:
+      - explode: false
+        in: path
+        name: transcription_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The format to export the transcription in
+        explode: true
+        in: query
+        name: format
+        required: false
+        schema:
+          enum:
+          - srt
+          - stt
+          type: string
+        style: deepObject
+      responses:
+        "200":
+          content:
+            application/octet-stream:
+              schema:
+                format: binary
+                type: string
+          description: Successful export
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_transcription__transcription_id__export_get_400_response'
+          description: Unsupported format
+      summary: Export transcription in several subtitle formats
       tags:
       - transcription
       x-openapi-router-controller: openapi_server.controllers.transcription_controller
@@ -585,6 +621,22 @@ components:
           title: job_id
           type: string
       title: _transcription_post_request
+      type: object
+    _transcription__transcription_id__patch_request:
+      properties:
+        data:
+          $ref: '#/components/schemas/TranscriptionData'
+      title: _transcription__transcription_id__patch_request
+      type: object
+    _transcription__transcription_id__export_get_400_response:
+      example:
+        error: Unsupported format
+      properties:
+        error:
+          example: Unsupported format
+          title: error
+          type: string
+      title: _transcription__transcription_id__export_get_400_response
       type: object
     _video_get_200_response_inner:
       example:
