@@ -14,6 +14,8 @@ import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 
+import MaisLogo from "./mais-logo";
+
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { GithubIcon } from "@/components/icons";
@@ -48,7 +50,10 @@ export const Navbar = () => {
         <NavbarMenuToggle className="sm:hidden" />
         <NavbarBrand>
           <NextLink className="" href="/">
-            <p className="font-bold text-inherit">MAIS</p>
+            <div className="flex gap-2 items-center justify-content">
+              <MaisLogo />
+              <p className="font-bold text-inherit">MAIS</p>
+            </div>
           </NextLink>
         </NavbarBrand>
       </NavbarContent>
