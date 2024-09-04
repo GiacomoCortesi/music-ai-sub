@@ -214,7 +214,7 @@ paths:
           - srt
           - stt
           type: string
-        style: deepObject
+        style: form
       responses:
         "200":
           content:
@@ -619,6 +619,9 @@ components:
           $ref: '#/components/schemas/TranscriptionData'
         job_id:
           title: job_id
+          type: string
+        video_file:
+          title: video_file
           type: string
       title: _transcription_post_request
       type: object

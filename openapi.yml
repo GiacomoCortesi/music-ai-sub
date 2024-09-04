@@ -87,6 +87,8 @@ paths:
                   $ref: '#/components/schemas/TranscriptionData'
                 job_id:
                   type: string
+                video_file:
+                  type: string
       responses:
         '200':
           description: A successful response
