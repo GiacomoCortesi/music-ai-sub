@@ -1,21 +1,20 @@
 "use client";
 
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { useState, useEffect } from "react";
 import { Button } from "@nextui-org/button";
-
-import MagicButtons from "./magic-buttons";
 
 import { ISegment, IWord } from "@/types/transcription";
 import SubtitleSegment from "@/components/editor/subtitle-segment";
 import { editTranscription } from "@/actions/transcription";
 
+import MagicButtons from "./magic-buttons";
+
 interface Props {
   language: string;
-  segments: ISegment[];
+  defaultSegments: ISegment[];
   wordSegments: IWord[];
   transcriptionId: string;
-  jobId: string;
 }
 
 export default function SubtitleEditor({
@@ -23,24 +22,8 @@ export default function SubtitleEditor({
   defaultSegments,
   wordSegments,
   transcriptionId,
-  jobId,
 }: Props) {
   const [segments, setSegments] = useState<ISegment[]>(defaultSegments);
-  const [isSaving, setIsSaving] = useState<boolean>(false);
-
-  useEffect(() => {
-    const timeoutId = setTimeout(async () => {
-      setIsSaving(true);
-      await editTranscription(transcriptionId, {
-        language: language,
-        segments: segments,
-        word_segments: wordSegments,
-      });
-      setIsSaving(false);
-    }, 5000); // Autosave after 5 seconds of inactivity
-
-    return () => clearTimeout(timeoutId);
-  }, [segments]);
 
   // update subtitle segments everytime the defaultSegments props change (e.g. due to a Clear magic button click)
   useEffect(() => {
@@ -51,23 +34,32 @@ export default function SubtitleEditor({
     updateSegmentsOnPropsChange();
   }, [defaultSegments]);
 
-  const onTextHandler = (text: string, index: number) => {
+  const onTextHandler = (
+    event: ChangeEvent<HTMLTextAreaElement>,
+    index: number
+  ) => {
     const newSegments = [...segments];
 
-    newSegments[index].text = text;
+    newSegments[index].text = event.target.value;
     setSegments(newSegments);
   };
-  const onStartHandler = (start: number, index: number) => {
+  const onStartHandler = (
+    event: ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
     const newSegments = [...segments];
 
-    newSegments[index].start = Number(start);
+    newSegments[index].start = Number(event.target.value);
 
     setSegments(newSegments);
   };
-  const onEndHandler = (end: number, index: number) => {
+  const onEndHandler = (
+    event: ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
     const newSegments = [...segments];
 
-    newSegments[index].end = Number(end);
+    newSegments[index].end = Number(event.target.value);
     setSegments(newSegments);
   };
   const onDeleteHandler = (index: number) => {
@@ -75,10 +67,6 @@ export default function SubtitleEditor({
 
     newSegments.splice(index, 1);
     setSegments(newSegments);
-  };
-
-  const onClearHandler = () => {
-    // setSegments(defaultSegments);
   };
 
   return (
@@ -103,16 +91,19 @@ export default function SubtitleEditor({
             start={segment.start}
             text={segment.text}
             onDelete={() => onDeleteHandler(index)}
-            onEnd={(end: number) => onEndHandler(end, index)}
-            onStart={(start: number) => onStartHandler(start, index)}
-            onText={(text: string) => onTextHandler(text, index)}
+            onEnd={(event: ChangeEvent<HTMLInputElement>) =>
+              onEndHandler(event, index)
+            }
+            onStart={(event: ChangeEvent<HTMLInputElement>) =>
+              onStartHandler(event, index)
+            }
+            onText={(event: ChangeEvent<HTMLTextAreaElement>) =>
+              onTextHandler(event, index)
+            }
           />
         );
       })}
-      <MagicButtons
-        transcriptionId={transcriptionId}
-        onClear={onClearHandler}
-      />
+      <MagicButtons transcriptionId={transcriptionId} />
     </div>
   );
 }

@@ -11,23 +11,18 @@ export default function FileUpload() {
     e.preventDefault();
     if (!file) return;
 
-    try {
-      const data = new FormData();
+    const data = new FormData();
 
-      data.set("file", file);
+    data.set("file", file);
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/video`, {
-        method: "POST",
-        body: data,
-      });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/video`, {
+      method: "POST",
+      body: data,
+    });
 
-      revalidateVideoFiles();
-      // handle the error
-      if (!res.ok) throw new Error(await res.text());
-    } catch (e: any) {
-      // Handle errors here
-      console.error(e);
-    }
+    revalidateVideoFiles();
+
+    if (!res.ok) throw new Error(await res.text());
   };
 
   return (

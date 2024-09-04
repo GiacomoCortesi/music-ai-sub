@@ -11,22 +11,30 @@ import {
 } from "@nextui-org/table";
 import { Tooltip } from "@nextui-org/tooltip";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
-import { useCallback } from "react";
+import { Key, useCallback } from "react";
 
 import { ITranscription } from "@/types/transcription";
 import { deleteTranscription } from "@/actions/transcription";
-export default function TranscriptionTable({
-  transcriptions,
-}: ITranscription[]) {
-  let rows = [];
+
+export interface Props {
+  transcriptions: ITranscription[];
+}
+
+export default function TranscriptionTable({ transcriptions }: Props) {
+  const rows: {
+    key: number;
+    file: string;
+    language: string;
+    id: string;
+  }[] = [];
   const router = useRouter();
 
   transcriptions.forEach((transcription, index) => {
     rows.push({
       key: index,
-      file: transcription["video_file"],
-      language: transcription["data"]["language"],
-      id: transcription["transcription_id"],
+      file: transcription.video_file,
+      language: transcription.data.language,
+      id: transcription.transcription_id,
     });
   });
 
@@ -49,8 +57,8 @@ export default function TranscriptionTable({
     },
   ];
 
-  const renderCell = useCallback((user, columnKey, index) => {
-    const cellValue = user[columnKey];
+  const renderCell = useCallback((row: any, columnKey: Key, index: number) => {
+    const cellValue = row[columnKey.toString()];
 
     switch (columnKey) {
       case "actions":
@@ -61,7 +69,7 @@ export default function TranscriptionTable({
                 <AiFillEdit
                   onClick={() => {
                     router.push(
-                      `/transcription/${transcriptions[index]?.transcription_id}`,
+                      `/transcription/${transcriptions[index]?.transcription_id}`
                     );
                   }}
                 />
@@ -72,7 +80,7 @@ export default function TranscriptionTable({
                 <AiFillDelete
                   onClick={deleteTranscription.bind(
                     null,
-                    transcriptions[index]?.transcription_id,
+                    transcriptions[index]?.transcription_id
                   )}
                 />
               </span>

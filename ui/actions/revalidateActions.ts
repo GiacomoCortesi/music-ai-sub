@@ -6,7 +6,7 @@ export async function revalidateVideoFiles() {
   revalidateTag("uploaded_video_files");
 }
 
-export async function revalidateTranscription(transcriptionId) {
+export async function revalidateTranscription(transcriptionId: string) {
   revalidatePath(`/transcription/${transcriptionId}`);
 }
 

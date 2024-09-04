@@ -6,7 +6,11 @@ import { useState } from "react";
 
 import { clearTranscription } from "@/actions/transcription";
 
-export default function MagicButtonClear({ transcriptionId }) {
+interface Props {
+  transcriptionId: string;
+}
+
+export default function MagicButtonClear({ transcriptionId }: Props) {
   const [isLoading, setIsLoading] = useState(false);
 
   const onClick = async () => {
@@ -16,7 +20,7 @@ export default function MagicButtonClear({ transcriptionId }) {
   };
   const clearTranscriptionWithId = clearTranscription.bind(
     null,
-    transcriptionId,
+    transcriptionId
   );
 
   return (

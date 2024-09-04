@@ -14,11 +14,11 @@ import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 
-import MaisLogo from "./mais-logo";
-
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { GithubIcon } from "@/components/icons";
+
+import MaisLogo from "./mais-logo";
 
 export const Navbar = () => {
   const pathname = usePathname();

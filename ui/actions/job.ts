@@ -1,17 +1,18 @@
-export default async function startJob(filename, options) {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/job`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ video_file: filename, config: options }),
-    });
+import { ISubtitleJobOptions } from "@/types/job";
 
-    if (!res.ok) throw new Error(await res.text());
+export default async function startJob(
+  filename: string,
+  options: ISubtitleJobOptions
+) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/job`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ video_file: filename, config: options }),
+  });
 
-    const data = await res.json();
+  if (!res.ok) throw new Error(await res.text());
 
-    return data;
-  } catch (e: any) {
-    console.error(e);
-  }
+  const data = await res.json();
+
+  return data;
 }

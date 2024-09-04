@@ -1,15 +1,20 @@
 "use client";
-import { Button, ButtonGroup } from "@nextui-org/button";
 import { useState } from "react";
-
-import JobStatus from "./job-status";
-import SettingsDropdown from "./settings-dropdown";
+import { Button, ButtonGroup } from "@nextui-org/button";
 
 import startJob from "@/actions/job";
+import { ISubtitleJobOptions } from "@/types/job";
 
-export default function GenerateButton({ videoFile }) {
+import JobStatus from "./job-status-card";
+import SettingsDropdown from "./settings-dropdown";
+
+export interface Props {
+  videoFile: string;
+}
+
+export default function GenerateButton({ videoFile }: Props) {
   const [jobId, setJobId] = useState(null);
-  const [options, setOptions] = useState({
+  const [options, setOptions] = useState<ISubtitleJobOptions>({
     speaker_detection: true,
     subtitles_frequency: 5,
     language: "it",
@@ -17,7 +22,7 @@ export default function GenerateButton({ videoFile }) {
     hugging_face_token: "hugging_face_token",
   });
 
-  const onStatusChange = (newStatus) => {
+  const onStatusChange = (newStatus: string) => {
     if (newStatus === "finished") {
       setJobId(null);
     }
@@ -29,7 +34,7 @@ export default function GenerateButton({ videoFile }) {
     setJobId(job_id);
   };
 
-  const updateOptions = (key, value) => {
+  const updateOptions = (key: string, value: any) => {
     setOptions((prevParams) => ({
       ...prevParams,
       [key]: value,
@@ -40,7 +45,6 @@ export default function GenerateButton({ videoFile }) {
     <>
       <ButtonGroup>
         <Button
-          className="m-4"
           isDisabled={videoFile ? false : true}
           isLoading={jobId ? true : false}
           onClick={() => onClick()}
@@ -48,9 +52,9 @@ export default function GenerateButton({ videoFile }) {
           {videoFile ? "Generate" : "Select video"}
         </Button>
         <SettingsDropdown
+          isDisabled={jobId ? true : false}
           options={options}
-          updateParam={updateOptions}
-          videoFile={videoFile}
+          onOptionUpdate={updateOptions}
         />
       </ButtonGroup>
       {jobId && <JobStatus jobId={jobId} onStatusChange={onStatusChange} />}

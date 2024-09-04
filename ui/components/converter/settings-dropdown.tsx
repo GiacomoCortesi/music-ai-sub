@@ -12,8 +12,19 @@ import { Switch } from "@nextui-org/switch";
 import React from "react";
 
 import { CogFilledIcon } from "../icons";
+import { ISubtitleJobOptions } from "@/types/job";
 
-export default function SettingsDropdown({ videoFile, options, updateParam }) {
+export interface Props {
+  isDisabled: boolean;
+  options: ISubtitleJobOptions;
+  onOptionUpdate: (key: string, value: any) => void;
+}
+
+export default function SettingsDropdown({
+  isDisabled,
+  options,
+  onOptionUpdate,
+}: Props) {
   const modelSizes = [
     { key: "tiny", label: "Tiny" },
     { key: "small", label: "Small" },
@@ -32,7 +43,7 @@ export default function SettingsDropdown({ videoFile, options, updateParam }) {
     <>
       <Dropdown backdrop="blur" closeOnSelect={false}>
         <DropdownTrigger>
-          <Button isIconOnly color="default" isDisabled={!videoFile}>
+          <Button isIconOnly color="default" isDisabled={isDisabled}>
             <CogFilledIcon className="text-default-500" />
           </Button>
         </DropdownTrigger>
@@ -44,7 +55,7 @@ export default function SettingsDropdown({ videoFile, options, updateParam }) {
                 name="model_size"
                 selectedKeys={new Set([options.model_size])}
                 value={options.model_size}
-                onChange={(e) => updateParam("model_size", e.target.value)}
+                onChange={(e) => onOptionUpdate("model_size", e.target.value)}
               >
                 {modelSizes.map((modelSize) => (
                   <SelectItem key={modelSize.key} textValue={modelSize.label}>
@@ -59,7 +70,7 @@ export default function SettingsDropdown({ videoFile, options, updateParam }) {
                 name="language"
                 selectedKeys={new Set([options.language])}
                 value={options.language}
-                onChange={(e) => updateParam("language", e.target.value)}
+                onChange={(e) => onOptionUpdate("language", e.target.value)}
               >
                 {languages.map((lang) => (
                   <SelectItem key={lang.key} textValue={lang.label}>
@@ -79,7 +90,7 @@ export default function SettingsDropdown({ videoFile, options, updateParam }) {
                 name="subtitles_frequency"
                 step={1}
                 value={options.subtitles_frequency}
-                onChange={(e) => updateParam("subtitles_frequency", e)}
+                onChange={(e) => onOptionUpdate("subtitles_frequency", e)}
               />
             </DropdownItem>
           </DropdownSection>
@@ -87,7 +98,7 @@ export default function SettingsDropdown({ videoFile, options, updateParam }) {
             <DropdownItem key="speaker_detection" textValue="speaker_detection">
               <Switch
                 isSelected={options.speaker_detection}
-                onValueChange={(e) => updateParam("speaker_detection", e)}
+                onValueChange={(e) => onOptionUpdate("speaker_detection", e)}
               >
                 Speaker detection
               </Switch>

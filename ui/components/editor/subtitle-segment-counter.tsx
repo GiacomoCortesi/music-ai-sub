@@ -1,9 +1,19 @@
 "use client";
 
-import React from "react";
+import React, { ChangeEventHandler } from "react";
 import { Input } from "@nextui-org/input";
 
-export default function SubtitleSegmentCounter({ label, value, onChange }) {
+export interface Props {
+  label: string;
+  value: number;
+  onChange: ChangeEventHandler;
+}
+
+export default function SubtitleSegmentCounter({
+  label,
+  value,
+  onChange,
+}: Props) {
   return (
     <Input
       endContent={
@@ -14,7 +24,7 @@ export default function SubtitleSegmentCounter({ label, value, onChange }) {
       label={label}
       labelPlacement="outside"
       type="number"
-      value={value}
+      value={value.toString()}
       onChange={onChange}
     />
   );
