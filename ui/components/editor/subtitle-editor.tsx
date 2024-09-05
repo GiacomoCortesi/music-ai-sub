@@ -7,8 +7,11 @@ import { Button } from "@nextui-org/button";
 import { ISegment, IWord } from "@/types/transcription";
 import SubtitleSegment from "@/components/editor/subtitle-segment";
 import { editTranscription } from "@/actions/transcription";
+import { Tooltip } from "@nextui-org/tooltip";
 
 import MagicButtons from "./magic-buttons";
+
+import { AiOutlinePlusCircle } from "react-icons/ai";
 
 interface Props {
   language: string;
@@ -69,6 +72,19 @@ export default function SubtitleEditor({
     setSegments(newSegments);
   };
 
+  const handleAddSegment = (index: number) => {
+    const newSegments = [...segments];
+
+    const segment: ISegment = {
+      words: [],
+      start: segments[index].start,
+      end: segments[index].end,
+      text: "",
+    };
+    newSegments.splice(index, 0, segment);
+    setSegments(newSegments);
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <Button
@@ -85,22 +101,37 @@ export default function SubtitleEditor({
       {<p className="text-lg">Language: {language}</p>}
       {segments.map((segment: ISegment, index: number) => {
         return (
-          <SubtitleSegment
-            key={index}
-            end={segment.end}
-            start={segment.start}
-            text={segment.text}
-            onDelete={() => onDeleteHandler(index)}
-            onEnd={(event: ChangeEvent<HTMLInputElement>) =>
-              onEndHandler(event, index)
-            }
-            onStart={(event: ChangeEvent<HTMLInputElement>) =>
-              onStartHandler(event, index)
-            }
-            onText={(event: ChangeEvent<HTMLTextAreaElement>) =>
-              onTextHandler(event, index)
-            }
-          />
+          <>
+            <div key={`add-btn-cnt-${index}`} className="flex justify-center">
+              <Tooltip content="Add empty subtitle segment" delay={1000}>
+                <Button
+                  className="w-5 h-5"
+                  variant="light"
+                  color="secondary"
+                  isIconOnly
+                  onClick={(_) => handleAddSegment(index)}
+                >
+                  <AiOutlinePlusCircle className="w-full h-full" />
+                </Button>
+              </Tooltip>
+            </div>
+            <SubtitleSegment
+              key={`segment-${index}`}
+              end={segment.end}
+              start={segment.start}
+              text={segment.text}
+              onDelete={() => onDeleteHandler(index)}
+              onEnd={(event: ChangeEvent<HTMLInputElement>) =>
+                onEndHandler(event, index)
+              }
+              onStart={(event: ChangeEvent<HTMLInputElement>) =>
+                onStartHandler(event, index)
+              }
+              onText={(event: ChangeEvent<HTMLTextAreaElement>) =>
+                onTextHandler(event, index)
+              }
+            />
+          </>
         );
       })}
       <MagicButtons transcriptionId={transcriptionId} />

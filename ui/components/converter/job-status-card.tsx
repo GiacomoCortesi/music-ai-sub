@@ -52,6 +52,7 @@ export default function JobStatus({ jobId, onStatusChange }: Props) {
       clearInterval(intervalId);
     }
   }
+
   useEffect(() => {
     // call polling function to retrieve status immediately
     poll();
@@ -67,14 +68,25 @@ export default function JobStatus({ jobId, onStatusChange }: Props) {
         <Card className="m-2">
           <CardHeader className="flex gap-3">
             <JobInfoPopOver options={jobInfo.config} />
-            Subtitles generation in progress...
+            Subtitles generation in progress
           </CardHeader>
           <Divider />
           <CardBody>
             <p>
-              Generating subtitles for {jobInfo.video_file}
-              <br /> Current status: {status} <br />
-              It may take few minutes so be patient, it is worth it!
+              Generating subtitles for{" "}
+              <span className="text-amber-300">{jobInfo.video_file}</span>
+              <br /> Current status:{" "}
+              <span
+                className={
+                  status == "failed" ? "text-red-300" : "text-green-300"
+                }
+              >
+                {status}
+              </span>
+              <br />
+              <span className="font-semibold">
+                It may take few minutes so be patient, it is worth it!
+              </span>
             </p>
           </CardBody>
         </Card>

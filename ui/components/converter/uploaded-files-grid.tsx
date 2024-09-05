@@ -13,7 +13,7 @@ export default async function UploadedFilesGrid() {
 
   return (
     <>
-      <p className="text-lg">Uploaded files</p>
+      <p className="text-lg">Uploaded files:</p>
       <div className="grid gap-1 overflow-y-auto min-h-[50px] m-2 rounded-large border-opacity-50 border-white auto-cols-[8rem] grid-flow-col ">
         <UploadedFiles uploaded_video_files={uploaded_video_files} />
       </div>

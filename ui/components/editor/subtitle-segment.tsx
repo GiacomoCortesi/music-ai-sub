@@ -4,6 +4,7 @@ import React, { ChangeEventHandler, MouseEventHandler } from "react";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Textarea } from "@nextui-org/input";
 import { AiFillCloseCircle } from "react-icons/ai";
+import { Tooltip } from "@nextui-org/tooltip";
 
 import SubtitleSegmentCounter from "./subtitle-segment-counter";
 
@@ -29,12 +30,14 @@ export default function SubtitleSegment({
     <Card>
       {
         <CardHeader className="flex gap-3">
-          <button
-            className="absolute top-0 right-0 m-1 z-10 focus:outline-none"
-            onClick={onDelete}
-          >
-            <AiFillCloseCircle size={20} />
-          </button>
+          <Tooltip content="Delete subtitle segment" delay={1000}>
+            <button
+              className="absolute top-0 right-0 m-1 z-10 focus:outline-none"
+              onClick={onDelete}
+            >
+              <AiFillCloseCircle size={20} />
+            </button>
+          </Tooltip>
         </CardHeader>
       }
       <CardBody className="flex-row gap-4">
