@@ -1,11 +1,12 @@
 import { title } from "@/components/primitives";
 import Converter from "@/components/converter/converter";
 
-export default function ConverterPage({
-  searchParams,
-}: {
-  searchParams?: { [key: string]: string | undefined };
-}) {
+interface Props {
+  searchParams: {
+    selectedVideo?: string;
+  };
+}
+export default function ConverterPage({ searchParams }: Props) {
   const selectedVideo =
     searchParams && searchParams["selectedVideo"]
       ? searchParams["selectedVideo"]

@@ -1,6 +1,7 @@
 import { Card, CardFooter, CardHeader } from "@nextui-org/card";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { Button } from "@nextui-org/button";
+import { usePathname, useRouter } from "next/navigation";
 
 import deleteVideo from "@/actions/video";
 
@@ -19,10 +20,19 @@ export default function PreviewImageCard({
   isSelected,
   onSelectVideo,
 }: Props) {
+  const router = useRouter();
+  const pathName = usePathname();
+
   const deleteVideoWithName = deleteVideo.bind(null, alt);
 
   const onDeleteButtonClick = () => {
     deleteVideoWithName();
+
+    // Update the URL's search parameters
+    const newSearchParams = new URLSearchParams();
+
+    newSearchParams.set("selectedVideo", "");
+    router.push(`${pathName}?${newSearchParams.toString()}`);
   };
 
   return (

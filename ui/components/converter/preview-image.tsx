@@ -19,7 +19,7 @@ export default function PreviewImage({ alt, src, onSelectVideo }: Props) {
         (ref) => ref && !ref.contains(event.target as Node)
       )
     ) {
-      onSelectVideo(null);
+      onSelectVideo("");
     }
   };
 

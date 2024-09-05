@@ -5,8 +5,11 @@ import { ChangeEvent } from "react";
 import { revalidateVideoFiles } from "@/actions/revalidateActions";
 
 import { FileInput, Label } from "flowbite-react";
+import { useRouter, usePathname } from "next/navigation";
 
 export default function FileUpload() {
+  const router = useRouter();
+  const pathName = usePathname();
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) return;
 
@@ -23,13 +26,13 @@ export default function FileUpload() {
 
     if (!res.ok) throw new Error(await res.text());
 
+    revalidateVideoFiles();
+
     // Update the URL's search parameters
     const newSearchParams = new URLSearchParams();
 
     newSearchParams.set("selectedVideo", selectedFile.name);
-
-    window.history.pushState(null, "", `?${newSearchParams.toString()}`);
-    revalidateVideoFiles();
+    router.push(`${pathName}?${newSearchParams.toString()}`);
   };
 
   return (
