@@ -1,15 +1,18 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 "use client";
 
 import { ChangeEvent } from "react";
 
 import { revalidateVideoFiles } from "@/actions/revalidateActions";
-
-import { FileInput, Label } from "flowbite-react";
 import { useRouter, usePathname } from "next/navigation";
+import { useState } from "react";
 
 export default function FileUpload() {
   const router = useRouter();
   const pathName = usePathname();
+
+  const [isDragging, setIsDragging] = useState(false);
+
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) return;
 
@@ -35,15 +38,23 @@ export default function FileUpload() {
     router.push(`${pathName}?${newSearchParams.toString()}`);
   };
 
+  const handleDragEnter = () => {
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
   return (
     <div className="flex w-full items-center justify-center m-2">
-      <Label
+      <label
+        className={`${isDragging && "dark:border-purple-500 dark:bg-gray-900 bg-gray-100"} flex flex-col items-center justify-center w-full h-64 border-3 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-900 dark:bg-gray-800 hover:bg-gray-100 dark:border-purple-600 dark:hover:border-purple-500`}
         htmlFor="dropzone-file"
-        className="flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-amber-300 hover:bg-blue-500/20"
       >
-        <div className="flex flex-col items-center justify-center pb-6 pt-5">
+        <div className="absolute">
           <svg
-            className="mb-4 h-8 w-8 text-gray-500 dark:text-gray-400"
+            className="mx-auto w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -61,16 +72,17 @@ export default function FileUpload() {
             <span className="font-semibold">Click to upload</span> or drag and
             drop
           </p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">
-            MP4, AVI, MOV (MAX. 20Mb)
-          </p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">M4A, MOV</p>
         </div>
-        <FileInput
+        <input
+          onDragEnter={handleDragEnter}
+          onDragLeave={handleDragLeave}
           onChange={handleFileChange}
           id="dropzone-file"
-          className="hidden"
+          type="file"
+          className="opacity-0 w-full h-full"
         />
-      </Label>
+      </label>
     </div>
   );
 }
