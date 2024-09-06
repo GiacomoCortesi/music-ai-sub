@@ -57,13 +57,17 @@ def job_post(job_request=None):  # noqa: E501
     """
     if connexion.request.is_json:
         mais_job_post_request = JobRequest.from_dict(connexion.request.get_json())  # noqa: E501
-    # Create an instance of MyService
-    # subtitle_service = SubtitleService(model_size=mais_job_post_request.config.model_size, language=mais_job_post_request.config.language)
-    subtitle_service = SubtitleService()
+
+    if mais_job_post_request.config:
+        subtitle_service = SubtitleService(model_size=mais_job_post_request.config.model_size, language=mais_job_post_request.config.language)        
+    else:
+        subtitle_service = SubtitleService()
+    
     job_service =  current_app.config['job_service']
     video_service =  current_app.config['video_service']
-    # video = video_service.get(mais_job_post_request.video_file)
+
     job_info = {"video_file": mais_job_post_request.video_file, "config": {"speaker_detection": subtitle_service.speaker_detection, "subtitles_frequency": subtitle_service.subtitles_frequency, "language": subtitle_service.language, "model_size": subtitle_service.model_size}}
+    # video = video_service.get(mais_job_post_request.video_file)
     # TODO: eventyally handle subtitle generation in the job runner with a specific task. Multiple jobs that depend on each other? (e.g. subtitle gen job depends on vocal extraction etc.)
     # job = job_service.run(job_config, subtitle_service.generate_subtitles, video["video_path"])
     job = job_service.run(job_info, subtitle_service.generate_subtitles_mock)
