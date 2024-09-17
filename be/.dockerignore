@@ -16,7 +16,8 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-env/
+env
+.venv
 build/
 develop-eggs/
 dist/
@@ -70,3 +71,5 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+**/pretrained_models

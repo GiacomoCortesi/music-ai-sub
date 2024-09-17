@@ -68,34 +68,32 @@ export default function MagicButtonExport({ transcriptionId }: Props) {
 
   return (
     <>
-      <ButtonGroup>
-        <Button color="primary" isLoading={loading} onClick={onClick}>
-          <AiOutlineExport />
-          EXPORT {labelsMap[selectedOptionValue]}
-        </Button>
-        <Dropdown placement="bottom-end">
-          <DropdownTrigger>
-            <Button isIconOnly color="primary">
-              <ChevronDownIcon />
-            </Button>
-          </DropdownTrigger>
-          <DropdownMenu
-            disallowEmptySelection
-            aria-label="Export options"
-            className="max-w-[300px]"
-            selectedKeys={selectedOption}
-            selectionMode="single"
-            onSelectionChange={setSelectedOption}
-          >
-            <DropdownItem key="srt" description={descriptionsMap["srt"]}>
-              {labelsMap["srt"]}
-            </DropdownItem>
-            <DropdownItem key="stt" description={descriptionsMap["stt"]}>
-              {labelsMap["stt"]}
-            </DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-      </ButtonGroup>
+      <Button color="primary" isLoading={loading} onClick={onClick}>
+        <AiOutlineExport />
+        EXPORT {labelsMap[selectedOptionValue]}
+      </Button>
+      <Dropdown placement="bottom-end">
+        <DropdownTrigger>
+          <Button isIconOnly color="primary">
+            <ChevronDownIcon />
+          </Button>
+        </DropdownTrigger>
+        <DropdownMenu
+          disallowEmptySelection
+          aria-label="Export options"
+          className="max-w-[300px]"
+          selectedKeys={selectedOption}
+          selectionMode="single"
+          onSelectionChange={setSelectedOption}
+        >
+          <DropdownItem key="srt" description={descriptionsMap["srt"]}>
+            {labelsMap["srt"]}
+          </DropdownItem>
+          <DropdownItem key="stt" description={descriptionsMap["stt"]}>
+            {labelsMap["stt"]}
+          </DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
       <Snackbar
         isOpen={snackbarOpen}
         message={`Export failed: ${error}`}

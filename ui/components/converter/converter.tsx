@@ -6,7 +6,7 @@ type Props = {
   videoFile: string;
 };
 
-export default function Converter({ videoFile }: Props) {
+export default async function Converter({ videoFile }: Props) {
   return (
     <>
       <FileUpload />

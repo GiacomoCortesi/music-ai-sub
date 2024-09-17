@@ -3,9 +3,9 @@
 
 import { ChangeEvent } from "react";
 
-import { revalidateVideoFiles } from "@/actions/revalidateActions";
 import { useRouter, usePathname } from "next/navigation";
 import { useState } from "react";
+import { uploadVideo } from "@/actions/video";
 
 export default function FileUpload() {
   const router = useRouter();
@@ -22,14 +22,7 @@ export default function FileUpload() {
 
     data.set("file", selectedFile);
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/video`, {
-      method: "POST",
-      body: data,
-    });
-
-    if (!res.ok) throw new Error(await res.text());
-
-    revalidateVideoFiles();
+    await uploadVideo(data);
 
     // Update the URL's search parameters
     const newSearchParams = new URLSearchParams();

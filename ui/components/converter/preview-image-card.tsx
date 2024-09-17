@@ -3,7 +3,7 @@ import { AiFillCloseCircle } from "react-icons/ai";
 import { Button } from "@nextui-org/button";
 import { usePathname, useRouter } from "next/navigation";
 
-import deleteVideo from "@/actions/video";
+import { deleteVideo } from "@/actions/video";
 
 import PreviewImage from "./preview-image";
 
@@ -37,7 +37,7 @@ export default function PreviewImageCard({
 
   return (
     <Card
-      className={`m-1 ${isSelected ? "rounded-large border-2 border-blue-500" : ""}`}
+      className={`m-1 w-full ${isSelected ? "rounded-large border-2 border-blue-500" : ""}`}
       onPress={() => onSelectVideo(alt)}
     >
       <CardHeader className="justify-end p-0">

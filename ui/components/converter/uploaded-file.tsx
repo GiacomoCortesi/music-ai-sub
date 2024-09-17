@@ -11,7 +11,7 @@ export interface Props {
 export default function UploadedFile({ uploadedFile }: Props) {
   return (
     <>
-      <div className="flex items-center justify-center w-full h-52">
+      <div className="min-w-32 max-w-52">
         {uploadedFile ? (
           <PreviewImageCard
             isSelected

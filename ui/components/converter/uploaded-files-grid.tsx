@@ -1,9 +1,7 @@
 import UploadedFiles from "./uploaded-files";
 
 export default async function UploadedFilesGrid() {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/video`, {
-    next: { tags: ["uploaded_video_files"] },
-  });
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/video`, {});
 
   if (!response.ok) {
     throw new Error("failed to fetch uploaded video files");

@@ -15,7 +15,7 @@ export default function ConverterPage({ searchParams }: Props) {
     <>
       <h1 className={title()}>MAIS Converter</h1>
       <p className="text-lg">
-        Instantly create and edit subtitles from a music video
+        Instantly create and edit subtitles from a music video or audio
       </p>
       <Converter videoFile={selectedVideo} />
     </>
