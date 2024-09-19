@@ -5,7 +5,7 @@ import os
 from redis import Redis
 
 def get_config():
-    r = Redis()
+    r = Redis(host=os.getenv("REDIS_HOST"), port=os.getenv("REDIS_PORT"))
     return {
         'video_service': VideoService(),
         'job_service': JobService(r),

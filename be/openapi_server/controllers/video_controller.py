@@ -33,7 +33,7 @@ def video_get():  # noqa: E501
 
     :rtype: Union[List[VideoGet200ResponseInner], Tuple[List[VideoGet200ResponseInner], int], Tuple[List[VideoGet200ResponseInner], int, Dict[str, str]]
     """
-    video_files = current_app.config['video_service'].get_with_url(request.url_root)
+    video_files = current_app.config['video_service'].get_with_url()
     return video_files
 
 def video_post(file=None):  # noqa: E501

@@ -11,7 +11,7 @@ export interface Props {
 }
 
 export default function PreviewImage({ alt, src, onSelectVideo }: Props) {
-  const [imageLoaded, setImageLoaded] = useState(true);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const cardRefs = useRef<HTMLDivElement[] | null>([]);
   const handleClickOutside = (event: Event) => {
     if (
@@ -25,11 +25,20 @@ export default function PreviewImage({ alt, src, onSelectVideo }: Props) {
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
+    const checkImage = async () => {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${src}`, {
+        method: "HEAD",
+      });
+      if (response.ok) {
+        setImageLoaded(true);
+      }
+    };
+    checkImage();
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [src]);
 
   return (
     <div className="flex justify-center h-28 items-center w-full">
@@ -38,7 +47,7 @@ export default function PreviewImage({ alt, src, onSelectVideo }: Props) {
           isZoomed
           alt={alt}
           className="object-fit w-full h-28"
-          src={src}
+          src={`${process.env.NEXT_PUBLIC_API_URL}${src}`}
           onClick={() => {
             onSelectVideo(alt);
           }}

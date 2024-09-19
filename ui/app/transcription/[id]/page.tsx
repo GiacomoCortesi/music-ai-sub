@@ -3,7 +3,7 @@ import SubtitleEditor from "@/components/editor/subtitle-editor";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/transcription/${params.id}`,
+    `${process.env.API_URL}/transcription/${params.id}`,
     {
       method: "GET",
       cache: "no-store",

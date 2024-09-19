@@ -38,9 +38,12 @@
 		"next-ui": "^0.9.0",
 		"react": "18.3.1",
 		"react-dom": "18.3.1",
-		"react-icons": "^5.2.1"
+		"react-icons": "^5.2.1",
+		"sharp": "^0.33.5"
 	},
 	"devDependencies": {
+		"@swc/cli": "^0.4.1-nightly.20240914",
+		"@swc/core": "^1.7.26",
 		"@types/node": "20.5.7",
 		"@types/react": "18.3.3",
 		"@types/react-dom": "18.3.0",
