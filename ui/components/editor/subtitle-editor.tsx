@@ -3,15 +3,14 @@
 import React, { ChangeEvent } from "react";
 import { useState, useEffect } from "react";
 import { Button } from "@nextui-org/button";
+import { Tooltip } from "@nextui-org/tooltip";
+import { AiOutlinePlusCircle } from "react-icons/ai";
 
 import { ISegment, IWord } from "@/types/transcription";
 import SubtitleSegment from "@/components/editor/subtitle-segment";
 import { editTranscription } from "@/actions/transcription";
-import { Tooltip } from "@nextui-org/tooltip";
 
 import MagicButtons from "./magic-buttons";
-
-import { AiOutlinePlusCircle } from "react-icons/ai";
 
 interface Props {
   language: string;
@@ -39,7 +38,7 @@ export default function SubtitleEditor({
 
   const onTextHandler = (
     event: ChangeEvent<HTMLTextAreaElement>,
-    index: number
+    index: number,
   ) => {
     const newSegments = [...segments];
 
@@ -48,7 +47,7 @@ export default function SubtitleEditor({
   };
   const onStartHandler = (
     event: ChangeEvent<HTMLInputElement>,
-    index: number
+    index: number,
   ) => {
     const newSegments = [...segments];
 
@@ -58,7 +57,7 @@ export default function SubtitleEditor({
   };
   const onEndHandler = (
     event: ChangeEvent<HTMLInputElement>,
-    index: number
+    index: number,
   ) => {
     const newSegments = [...segments];
 
@@ -81,6 +80,7 @@ export default function SubtitleEditor({
       end: segments[index].end,
       text: "",
     };
+
     newSegments.splice(index, 0, segment);
     setSegments(newSegments);
   };
@@ -105,10 +105,10 @@ export default function SubtitleEditor({
             <div key={`add-btn-cnt-${index}`} className="flex justify-center">
               <Tooltip content="Add empty subtitle segment" delay={1000}>
                 <Button
-                  className="w-5 h-5"
-                  variant="light"
-                  color="secondary"
                   isIconOnly
+                  className="w-5 h-5"
+                  color="secondary"
+                  variant="light"
                   onClick={(_) => handleAddSegment(index)}
                 >
                   <AiOutlinePlusCircle className="w-full h-full" />

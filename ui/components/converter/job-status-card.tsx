@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Card, CardHeader, CardBody } from "@nextui-org/card";
+import { Divider } from "@nextui-org/divider";
 
 import { createTranscription } from "@/actions/transcription";
 import { ISubtitleJobConfig } from "@/types/job";
+
 import JobInfoPopOver from "./job-info-popover";
-import { Card, CardHeader, CardBody } from "@nextui-org/card";
-import { Divider } from "@nextui-org/divider";
 
 export interface Props {
   jobId: string;
@@ -29,7 +30,7 @@ export default function JobStatus({ jobId, onStatusChange }: Props) {
 
   async function poll() {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/job/${jobId}`
+      `${process.env.NEXT_PUBLIC_API_URL}/job/${jobId}`,
     );
     const { status, config, data } = await response.json();
 
@@ -43,7 +44,7 @@ export default function JobStatus({ jobId, onStatusChange }: Props) {
       const { transcription_id: transcriptionId } = await createTranscription(
         data,
         jobId,
-        config.video_file
+        config.video_file,
       );
 
       router.push(`/transcription/${transcriptionId}`);

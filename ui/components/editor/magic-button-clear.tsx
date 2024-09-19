@@ -20,7 +20,7 @@ export default function MagicButtonClear({ transcriptionId }: Props) {
   };
   const clearTranscriptionWithId = clearTranscription.bind(
     null,
-    transcriptionId
+    transcriptionId,
   );
 
   return (

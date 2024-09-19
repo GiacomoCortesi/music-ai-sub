@@ -1,5 +1,6 @@
-import UploadedFile from "./uploaded-file";
 import { IVideoFile } from "@/types/video";
+
+import UploadedFile from "./uploaded-file";
 
 export interface Props {
   videoFile: string;
@@ -16,6 +17,7 @@ export default async function UploadedFileCnt({ videoFile }: Props) {
   const selectedVideoFile = uploaded_video_files.filter((value: IVideoFile) => {
     return value.video_name == videoFile;
   })[0];
+
   return (
     <div className="w-full flex items-center justify-center h-52">
       <UploadedFile uploadedFile={selectedVideoFile} />

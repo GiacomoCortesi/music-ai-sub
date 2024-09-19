@@ -7,7 +7,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     {
       method: "GET",
       cache: "no-store",
-    }
+    },
   );
 
   if (!response.ok) {

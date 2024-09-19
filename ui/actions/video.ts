@@ -5,7 +5,7 @@ export async function deleteVideo(filename: string) {
     `${process.env.NEXT_PUBLIC_API_URL}/video?filename=${filename}`,
     {
       method: "DELETE",
-    }
+    },
   );
 
   if (!res.ok) throw new Error(await res.text());

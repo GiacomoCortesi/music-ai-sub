@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { AiOutlineExport } from "react-icons/ai";
-import { Button, ButtonGroup } from "@nextui-org/button";
+import { Button } from "@nextui-org/button";
 import {
   Dropdown,
   DropdownTrigger,
@@ -28,7 +28,7 @@ export default function MagicButtonExport({ transcriptionId }: Props) {
     setError("");
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/transcription/${transcriptionId}/export?format=${selectedOptionValue}`
+        `${process.env.NEXT_PUBLIC_API_URL}/transcription/${transcriptionId}/export?format=${selectedOptionValue}`,
       );
       const filename = `${transcriptionId}-${selectedOptionValue}`;
 

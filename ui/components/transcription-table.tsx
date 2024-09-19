@@ -69,7 +69,7 @@ export default function TranscriptionTable({ transcriptions }: Props) {
                 <AiFillEdit
                   onClick={() => {
                     router.push(
-                      `/transcription/${transcriptions[index]?.transcription_id}`
+                      `/transcription/${transcriptions[index]?.transcription_id}`,
                     );
                   }}
                 />
@@ -80,7 +80,7 @@ export default function TranscriptionTable({ transcriptions }: Props) {
                 <AiFillDelete
                   onClick={deleteTranscription.bind(
                     null,
-                    transcriptions[index]?.transcription_id
+                    transcriptions[index]?.transcription_id,
                   )}
                 />
               </span>

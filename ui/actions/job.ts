@@ -2,7 +2,7 @@ import { ISubtitleJobOptions } from "@/types/job";
 
 export default async function startJob(
   filename: string,
-  options: ISubtitleJobOptions
+  options: ISubtitleJobOptions,
 ) {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/job`, {
     method: "POST",

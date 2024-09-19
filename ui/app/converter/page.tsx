@@ -11,6 +11,7 @@ export default function ConverterPage({ searchParams }: Props) {
     searchParams && searchParams["selectedVideo"]
       ? searchParams["selectedVideo"]
       : "";
+
   return (
     <>
       <h1 className={title()}>MAIS Converter</h1>

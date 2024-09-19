@@ -1,11 +1,10 @@
 import React from "react";
 import { Popover, PopoverTrigger, PopoverContent } from "@nextui-org/popover";
 import { AiFillInfoCircle } from "react-icons/ai";
-import { Button } from "@nextui-org/button";
-import { ISubtitleJobOptions } from "@/types/job";
-
 import { AiOutlineCheck } from "react-icons/ai";
 import { AiOutlineClose } from "react-icons/ai";
+
+import { ISubtitleJobOptions } from "@/types/job";
 
 export interface Props {
   options: ISubtitleJobOptions;
@@ -16,7 +15,6 @@ export default function JobInfoPopOver({ options }: Props) {
     <Popover
       showArrow
       backdrop="opaque"
-      placement="right"
       classNames={{
         base: [
           // arrow color
@@ -28,6 +26,7 @@ export default function JobInfoPopOver({ options }: Props) {
           "dark:from-default-100 dark:to-default-50",
         ],
       }}
+      placement="right"
     >
       <PopoverTrigger>
         <div>

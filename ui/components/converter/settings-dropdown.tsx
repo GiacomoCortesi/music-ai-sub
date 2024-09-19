@@ -11,8 +11,9 @@ import { Select, SelectItem } from "@nextui-org/select";
 import { Switch } from "@nextui-org/switch";
 import React from "react";
 
-import { CogFilledIcon } from "../icons";
 import { ISubtitleJobOptions } from "@/types/job";
+
+import { CogFilledIcon } from "../icons";
 
 export interface Props {
   isDisabled: boolean;
