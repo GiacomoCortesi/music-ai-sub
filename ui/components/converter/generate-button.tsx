@@ -1,15 +1,21 @@
 "use client";
-import { Button, ButtonGroup } from "@nextui-org/button";
 import { useState } from "react";
-
-import JobStatus from "./job-status";
-import SettingsDropdown from "./settings-dropdown";
+import { Button, ButtonGroup } from "@nextui-org/button";
 
 import startJob from "@/actions/job";
+import { ISubtitleJobOptions } from "@/types/job";
 
-export default function GenerateButton({ videoFile }) {
-  const [jobId, setJobId] = useState(null);
-  const [options, setOptions] = useState({
+import JobStatus from "./job-status-card";
+import SettingsDropdown from "./settings-dropdown";
+
+export interface Props {
+  videoFile: string;
+}
+
+export default function GenerateButton({ videoFile }: Props) {
+  const [jobId, setJobId] = useState("");
+  const [isRunning, setIsRunning] = useState(false);
+  const [options, setOptions] = useState<ISubtitleJobOptions>({
     speaker_detection: true,
     subtitles_frequency: 5,
     language: "it",
@@ -17,19 +23,22 @@ export default function GenerateButton({ videoFile }) {
     hugging_face_token: "hugging_face_token",
   });
 
-  const onStatusChange = (newStatus) => {
-    if (newStatus === "finished") {
-      setJobId(null);
+  const onStatusChange = (newStatus: string) => {
+    if (newStatus == "queued") {
+      setIsRunning(true);
+    }
+    if (newStatus === "finished" || newStatus == "failed") {
+      setIsRunning(false);
     }
   };
 
   const onClick = async () => {
     const { job_id } = await startJob(videoFile, options);
-
+    setIsRunning(true);
     setJobId(job_id);
   };
 
-  const updateOptions = (key, value) => {
+  const updateOptions = (key: string, value: any) => {
     setOptions((prevParams) => ({
       ...prevParams,
       [key]: value,
@@ -40,20 +49,19 @@ export default function GenerateButton({ videoFile }) {
     <>
       <ButtonGroup>
         <Button
-          className="m-4"
           isDisabled={videoFile ? false : true}
-          isLoading={jobId ? true : false}
+          isLoading={isRunning ? true : false}
           onClick={() => onClick()}
         >
           {videoFile ? "Generate" : "Select video"}
         </Button>
         <SettingsDropdown
+          isDisabled={jobId ? true : false}
           options={options}
-          updateParam={updateOptions}
-          videoFile={videoFile}
+          onOptionUpdate={updateOptions}
         />
       </ButtonGroup>
-      {jobId && <JobStatus jobId={jobId} onStatusChange={onStatusChange} />}
+      {isRunning && <JobStatus jobId={jobId} onStatusChange={onStatusChange} />}
     </>
   );
 }

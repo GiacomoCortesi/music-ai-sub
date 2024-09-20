@@ -14,26 +14,31 @@ class TranscriptionPostRequest(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, data=None, job_id=None):  # noqa: E501
+    def __init__(self, data=None, job_id=None, video_file=None):  # noqa: E501
         """TranscriptionPostRequest - a model defined in OpenAPI
 
         :param data: The data of this TranscriptionPostRequest.  # noqa: E501
         :type data: TranscriptionData
         :param job_id: The job_id of this TranscriptionPostRequest.  # noqa: E501
         :type job_id: str
+        :param video_file: The video_file of this TranscriptionPostRequest.  # noqa: E501
+        :type video_file: str
         """
         self.openapi_types = {
             'data': TranscriptionData,
-            'job_id': str
+            'job_id': str,
+            'video_file': str
         }
 
         self.attribute_map = {
             'data': 'data',
-            'job_id': 'job_id'
+            'job_id': 'job_id',
+            'video_file': 'video_file'
         }
 
         self._data = data
         self._job_id = job_id
+        self._video_file = video_file
 
     @classmethod
     def from_dict(cls, dikt) -> 'TranscriptionPostRequest':
@@ -87,3 +92,24 @@ class TranscriptionPostRequest(Model):
         """
 
         self._job_id = job_id
+
+    @property
+    def video_file(self) -> str:
+        """Gets the video_file of this TranscriptionPostRequest.
+
+
+        :return: The video_file of this TranscriptionPostRequest.
+        :rtype: str
+        """
+        return self._video_file
+
+    @video_file.setter
+    def video_file(self, video_file: str):
+        """Sets the video_file of this TranscriptionPostRequest.
+
+
+        :param video_file: The video_file of this TranscriptionPostRequest.
+        :type video_file: str
+        """
+
+        self._video_file = video_file

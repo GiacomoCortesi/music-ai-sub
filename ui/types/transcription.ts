@@ -2,6 +2,7 @@ export interface ITranscription {
   transcription_id: "string";
   data: ITranscriptionData;
   job_id: "string";
+  video_file: "string";
 }
 
 export interface ITranscriptionData {

@@ -1,108 +1,94 @@
+import { ITranscriptionData } from "@/types/transcription";
+
 import {
   revalidateTranscription,
   revalidateTranscriptions,
 } from "./revalidateActions";
 
-export async function createTranscription(transcription, jobId) {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/transcription`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: transcription, job_id: jobId }),
-      },
-    );
+export async function createTranscription(
+  transcription: string,
+  jobId: string,
+  videoFile: string,
+) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/transcription`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      data: transcription,
+      job_id: jobId,
+      video_file: videoFile,
+    }),
+  });
 
-    if (!res.ok) throw new Error(await res.text());
+  if (!res.ok) throw new Error(await res.text());
 
-    const data = await res.json();
+  const data = await res.json();
 
-    return data;
-  } catch (e: any) {
-    console.error(e);
-  }
+  return data;
 }
 
-export async function clearTranscription(transcriptionId) {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/transcription/${transcriptionId}/clear`,
-      {
-        method: "POST",
-      },
-    );
+export async function clearTranscription(transcriptionId: string) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/transcription/${transcriptionId}/clear`,
+    {
+      method: "POST",
+    },
+  );
 
-    if (!res.ok) throw new Error(await res.text());
-    revalidateTranscription(transcriptionId);
-  } catch (e: any) {
-    console.error(e);
-  }
+  if (!res.ok) throw new Error(await res.text());
+  revalidateTranscription(transcriptionId);
 }
 
-export async function fitTranscription(transcriptionId) {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/transcription/${transcriptionId}/fit`,
-      {
-        method: "POST",
-      },
-    );
+export async function fitTranscription(transcriptionId: string) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/transcription/${transcriptionId}/fit`,
+    {
+      method: "POST",
+    },
+  );
 
-    if (!res.ok) throw new Error(await res.text());
-    revalidateTranscription(transcriptionId);
-  } catch (e: any) {
-    console.error(e);
-  }
+  if (!res.ok) throw new Error(await res.text());
+  revalidateTranscription(transcriptionId);
 }
 
-export async function fixTranscription(transcriptionId) {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/transcription/${transcriptionId}/fix`,
-      {
-        method: "POST",
-      },
-    );
+export async function fixTranscription(transcriptionId: string) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/transcription/${transcriptionId}/fix`,
+    {
+      method: "POST",
+    },
+  );
 
-    if (!res.ok) throw new Error(await res.text());
-    revalidateTranscription(transcriptionId);
-  } catch (e: any) {
-    console.error(e);
-  }
+  if (!res.ok) throw new Error(await res.text());
+  revalidateTranscription(transcriptionId);
 }
 
-export async function editTranscription(transcriptionId, transcription) {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/transcription/${transcriptionId}`,
-      {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: transcription }),
-      },
-    );
+export async function editTranscription(
+  transcriptionId: string,
+  transcription: ITranscriptionData,
+) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/transcription/${transcriptionId}`,
+    {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ data: transcription }),
+    },
+  );
 
-    if (!res.ok) throw new Error(await res.text());
+  if (!res.ok) throw new Error(await res.text());
 
-    revalidateTranscription(transcriptionId);
-  } catch (e: any) {
-    console.error(e);
-  }
+  revalidateTranscription(transcriptionId);
 }
 
-export async function deleteTranscription(transcriptionId) {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/transcription/${transcriptionId}`,
-      {
-        method: "DELETE",
-      },
-    );
+export async function deleteTranscription(transcriptionId: string) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/transcription/${transcriptionId}`,
+    {
+      method: "DELETE",
+    },
+  );
 
-    if (!res.ok) throw new Error(await res.text());
-    revalidateTranscriptions();
-  } catch (e: any) {
-    console.error(e);
-  }
+  if (!res.ok) throw new Error(await res.text());
+  revalidateTranscriptions();
 }

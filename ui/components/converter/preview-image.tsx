@@ -1,51 +1,72 @@
 "use client";
 import { Image } from "@nextui-org/image";
 import { FaImage } from "react-icons/fa";
-import { useState } from "react";
-import { AiFillCloseCircle } from "react-icons/ai";
+import { useState, useEffect, useRef } from "react";
+import { Button } from "@nextui-org/button";
 
-import deleteVideo from "@/actions/video";
+export interface Props {
+  alt: string;
+  src: string;
+  onSelectVideo: any;
+}
 
-export default function PreviewImage({
-  isSelected,
-  alt,
-  src,
-  width,
-  onSelectVideo,
-}) {
-  const [imageLoaded, setImageLoaded] = useState(true);
-  const deleteVideoWithName = deleteVideo.bind(null, alt);
-
-  const onDeleteButtonClick = () => {
-    deleteVideoWithName();
+export default function PreviewImage({ alt, src, onSelectVideo }: Props) {
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const cardRefs = useRef<HTMLDivElement[] | null>([]);
+  const handleClickOutside = (event: Event) => {
+    if (
+      cardRefs?.current?.every(
+        (ref) => ref && !ref.contains(event.target as Node),
+      )
+    ) {
+      onSelectVideo("");
+    }
   };
 
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    const checkImage = async () => {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${src}`, {
+        method: "HEAD",
+      });
+
+      if (response.ok) {
+        setImageLoaded(true);
+      }
+    };
+
+    checkImage();
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [src]);
+
   return (
-    <div
-      className={`my-2 mx-2 relative ${isSelected ? "rounded-large border-2 border-blue-500" : ""}`}
-      onClick={() => onSelectVideo(alt)}
-    >
+    <div className="flex justify-center h-28 items-center w-full">
       {imageLoaded ? (
         <Image
           isZoomed
           alt={alt}
-          className="object-fit"
-          src={src}
-          width={width}
+          className="object-fit w-full h-28"
+          src={`${process.env.NEXT_PUBLIC_API_URL}${src}`}
+          onClick={() => {
+            onSelectVideo(alt);
+          }}
           onError={() => setImageLoaded(false)}
         />
       ) : (
-        <div className="flex flex-col items-center justify-center h-full">
-          <p className="my-6">{alt}</p>
-          <FaImage size={50} />
-        </div>
+        <Button
+          disableAnimation
+          disableRipple
+          isIconOnly
+          className="flex justify-center h-28 items-center w-full"
+          variant="light"
+          onClick={() => onSelectVideo(alt)}
+        >
+          <FaImage className="w-full h-100%" size={50} />
+        </Button>
       )}
-      <button
-        className="absolute top-0 right-0 m-1 z-10 focus:outline-none"
-        onClick={() => onDeleteButtonClick()}
-      >
-        <AiFillCloseCircle size={20} />
-      </button>
     </div>
   );
 }

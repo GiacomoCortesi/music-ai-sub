@@ -5,7 +5,11 @@ import { useState } from "react";
 
 import { fitTranscription } from "@/actions/transcription";
 
-export default function MagicButtonFit({ transcriptionId }) {
+interface Props {
+  transcriptionId: string;
+}
+
+export default function MagicButtonFit({ transcriptionId }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const onClick = async () => {
     setIsLoading(true);

@@ -5,7 +5,11 @@ import { useState } from "react";
 
 import { fixTranscription } from "@/actions/transcription";
 
-export default function MagicButtonFix({ transcriptionId }) {
+interface Props {
+  transcriptionId: string;
+}
+
+export default function MagicButtonFix({ transcriptionId }: Props) {
   const [isLoading, setIsLoading] = useState(false);
 
   const onClick = async () => {

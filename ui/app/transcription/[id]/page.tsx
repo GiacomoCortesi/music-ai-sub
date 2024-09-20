@@ -3,11 +3,11 @@ import SubtitleEditor from "@/components/editor/subtitle-editor";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/transcription/${params.id}`,
+    `${process.env.API_URL}/transcription/${params.id}`,
     {
       method: "GET",
+      cache: "no-store",
     },
-    { cache: "no-store" },
   );
 
   if (!response.ok) {
@@ -21,7 +21,6 @@ export default async function Page({ params }: { params: { id: string } }) {
       <h1 className={title()}>MAIS Editor</h1>
       <SubtitleEditor
         defaultSegments={transcription.data.segments}
-        jobId={transcription.job_id}
         language={transcription.data.language}
         transcriptionId={transcription.transcription_id}
         wordSegments={transcription.data.word_segments}

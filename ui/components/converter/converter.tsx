@@ -1,13 +1,17 @@
 import FileUpload from "./file-upload";
-import UploadedFilesGrid from "./uploaded-files-grid";
 import GenerateButton from "./generate-button";
+import UploadedFileCnt from "./uploaded-file-cnt";
 
-export default function Converter({ searchParams }) {
+type Props = {
+  videoFile: string;
+};
+
+export default async function Converter({ videoFile }: Props) {
   return (
     <>
       <FileUpload />
-      <UploadedFilesGrid />
-      <GenerateButton videoFile={searchParams?.selectedVideo ?? ""} />
+      <UploadedFileCnt videoFile={videoFile} />
+      <GenerateButton videoFile={videoFile} />
     </>
   );
 }

@@ -25,8 +25,8 @@ class VideoService:
         for uploaded_video in self.get_all():
             videos_with_url.append({
             "video_name": uploaded_video["video_name"],
-            "video_url": f'{base_url}videos/{uploaded_video["video_id"]}/{uploaded_video["video_name"]}',
-            "image_url": f'{base_url}videos/{uploaded_video["video_id"]}/{os.path.basename(uploaded_video["image_path"])}',
+            "video_url": f'/videos/{uploaded_video["video_id"]}/{uploaded_video["video_name"]}',
+            "image_url": f'/videos/{uploaded_video["video_id"]}/{os.path.basename(uploaded_video["image_path"])}',
             "upload_date": uploaded_video["upload_date"],
             "video_id": uploaded_video["video_id"],
         })

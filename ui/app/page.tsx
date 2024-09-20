@@ -19,7 +19,10 @@ export default function Home() {
                 </CardHeader>
                 <Divider />
                 <CardBody>
-                  <p>Instantly create and edit subtitles from a music video</p>
+                  <p>
+                    Instantly create and edit subtitles from a music video or
+                    audio
+                  </p>
                 </CardBody>
               </Card>
             </Link>

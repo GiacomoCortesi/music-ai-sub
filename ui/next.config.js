@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "standalone",
   async redirects() {
     return [
       {
@@ -8,6 +9,11 @@ const nextConfig = {
         permanent: true, // Set to true for a permanent redirect (308), or false for a temporary redirect (307)
       },
     ];
+  },
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
   },
 };
 

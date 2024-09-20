@@ -94,12 +94,7 @@ export const HeartFilledIcon = ({
   </svg>
 );
 
-export const CogFilledIcon = ({
-  size = 24,
-  width,
-  height,
-  ...props
-}: IconSvgProps) => (
+export const CogFilledIcon = ({}: IconSvgProps) => (
   <svg
     fill="none"
     height="24"
