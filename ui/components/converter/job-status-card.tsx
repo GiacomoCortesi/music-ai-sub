@@ -30,12 +30,11 @@ export default function JobStatus({ jobId, onStatusChange }: Props) {
 
   async function poll() {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/job/${jobId}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/job/${jobId}`
     );
     const { status, config, data } = await response.json();
 
     setJobInfo(config);
-
     setStatus(status);
     onStatusChange(status);
 
@@ -44,7 +43,7 @@ export default function JobStatus({ jobId, onStatusChange }: Props) {
       const { transcription_id: transcriptionId } = await createTranscription(
         data,
         jobId,
-        config.video_file,
+        config.video_file
       );
 
       router.push(`/transcription/${transcriptionId}`);
@@ -76,7 +75,7 @@ export default function JobStatus({ jobId, onStatusChange }: Props) {
             <p>
               Generating subtitles for{" "}
               <span className="text-amber-300">{jobInfo.video_file}</span>
-              <br /> Current status:{" "}
+              <br /> Current status:
               <span
                 className={
                   status == "failed" ? "text-red-300" : "text-green-300"

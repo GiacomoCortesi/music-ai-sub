@@ -24,11 +24,14 @@ services:
       - redis-queue
 
   redis-queue:
-    image: "giacomocortesi/redis-queue:latest"
-    environment:
-      - REDIS_HOST=redis-server
+    build:
+      context: ./be
+      dockerfile: Dockerfile
     depends_on:
       - redis-server
+    command: rq worker 
 
   redis-server:
     image: "redis:latest"
+    ports:
+      - "6379:6379"

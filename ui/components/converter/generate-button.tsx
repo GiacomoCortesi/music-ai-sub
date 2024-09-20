@@ -13,7 +13,8 @@ export interface Props {
 }
 
 export default function GenerateButton({ videoFile }: Props) {
-  const [jobId, setJobId] = useState(null);
+  const [jobId, setJobId] = useState("");
+  const [isRunning, setIsRunning] = useState(false);
   const [options, setOptions] = useState<ISubtitleJobOptions>({
     speaker_detection: true,
     subtitles_frequency: 5,
@@ -23,14 +24,17 @@ export default function GenerateButton({ videoFile }: Props) {
   });
 
   const onStatusChange = (newStatus: string) => {
-    if (newStatus === "finished") {
-      setJobId(null);
+    if (newStatus == "queued") {
+      setIsRunning(true);
+    }
+    if (newStatus === "finished" || newStatus == "failed") {
+      setIsRunning(false);
     }
   };
 
   const onClick = async () => {
     const { job_id } = await startJob(videoFile, options);
-
+    setIsRunning(true);
     setJobId(job_id);
   };
 
@@ -46,7 +50,7 @@ export default function GenerateButton({ videoFile }: Props) {
       <ButtonGroup>
         <Button
           isDisabled={videoFile ? false : true}
-          isLoading={jobId ? true : false}
+          isLoading={isRunning ? true : false}
           onClick={() => onClick()}
         >
           {videoFile ? "Generate" : "Select video"}
@@ -57,7 +61,7 @@ export default function GenerateButton({ videoFile }: Props) {
           onOptionUpdate={updateOptions}
         />
       </ButtonGroup>
-      {jobId && <JobStatus jobId={jobId} onStatusChange={onStatusChange} />}
+      {isRunning && <JobStatus jobId={jobId} onStatusChange={onStatusChange} />}
     </>
   );
 }
