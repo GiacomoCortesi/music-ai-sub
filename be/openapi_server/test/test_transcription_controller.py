@@ -6,6 +6,9 @@ from unittest.mock import MagicMock
 from openapi_server.models.transcription_post200_response import TranscriptionPost200Response  # noqa: E501
 from openapi_server.models.transcription_post_request import TranscriptionPostRequest  # noqa: E501
 from openapi_server.test import BaseTestCase
+from openapi_server.models.transcription_data import TranscriptionData as ApiTranscriptionData
+from openapi_server.domain.models.transcription import Transcription as DomainTranscription
+from openapi_server.domain.models.transcription import TranscriptionData as DomainTranscriptionData
 
 
 class TestTranscriptionController(BaseTestCase):
@@ -16,7 +19,7 @@ class TestTranscriptionController(BaseTestCase):
 
         Creates a new transcription
         """
-        transcription_post_request = TranscriptionPostRequest()
+        transcription_post_request = TranscriptionPostRequest(data=ApiTranscriptionData(segments=[], word_segments=[], language="it"), job_id="dummy", video_file="dummy.mov")
         headers = { 
             'Accept': 'application/json',
             'Content-Type': 'application/json',
@@ -35,14 +38,14 @@ class TestTranscriptionController(BaseTestCase):
 
         Restores initial transcription
         """
-        headers = { 
+        headers = {
         }
 
         ts = self.app.config['transcription_service']
 
-        ts.get = MagicMock(return_value = {"data": {}, "job_id": "job_id"})
+        ts.get = MagicMock(return_value = DomainTranscription(transcription_id="dummy", data=DomainTranscriptionData(segments=[], word_segments=[], language="it"), job_id="dummy", video_file="dummy.mov"))
         ts.edit = MagicMock(return_value = None)
-
+ 
         response = self.client.open(
             '/transcription/{transcription_id}/clear'.format(transcription_id='transcription_id_example'),
             method='POST',
@@ -95,7 +98,7 @@ class TestTranscriptionController(BaseTestCase):
         }
 
         ts = self.app.config["transcription_service"]
-        ts.get = MagicMock(return_value = {"data": {}, "job_id": "job_id"})
+        ts.get = MagicMock(return_value = DomainTranscription(transcription_id="dummy", data=DomainTranscriptionData(segments=[], word_segments=[], language="it"), job_id="dummy", video_file="dummy.mov"))
 
         response = self.client.open(
             '/transcription/{transcription_id}'.format(transcription_id='transcription_id_example'),

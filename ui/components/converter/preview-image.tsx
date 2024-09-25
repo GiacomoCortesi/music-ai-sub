@@ -16,7 +16,7 @@ export default function PreviewImage({ alt, src, onSelectVideo }: Props) {
   const handleClickOutside = (event: Event) => {
     if (
       cardRefs?.current?.every(
-        (ref) => ref && !ref.contains(event.target as Node),
+        (ref) => ref && !ref.contains(event.target as Node)
       )
     ) {
       onSelectVideo("");
@@ -26,12 +26,17 @@ export default function PreviewImage({ alt, src, onSelectVideo }: Props) {
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     const checkImage = async () => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${src}`, {
-        method: "HEAD",
-      });
+      if (src) {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}${src}`,
+          {
+            method: "HEAD",
+          }
+        );
 
-      if (response.ok) {
-        setImageLoaded(true);
+        if (response.ok) {
+          setImageLoaded(true);
+        }
       }
     };
 

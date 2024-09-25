@@ -17,5 +17,6 @@ numpy == 1.26.4
 spleeter == 2.4.0
 whisperx == 3.1.5
 torch == 2.3.1
+pydantic
 moviepy
 rq

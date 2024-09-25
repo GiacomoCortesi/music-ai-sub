@@ -5,9 +5,10 @@ import torch
 import os
 import uuid
 import time
+from pathlib import Path
 
 class SubtitleService:
-    def __init__(self, model_size="tiny", language=None, subtitles_frequency=5, speaker_detection=False, hugging_face_token="", separate_vocals=True, cache_path = "/tmp/mais", captions_path = "captions/"):
+    def __init__(self, model_size="tiny", language=None, subtitles_frequency=5, speaker_detection=False, hugging_face_token="", separate_vocals=True, cache_path: Path = Path("/tmp/mais"), captions_path: Path = Path("captions")):
         self.model_size = model_size
         self.language = language
         self.subtitles_frequency = subtitles_frequency
@@ -17,7 +18,7 @@ class SubtitleService:
 
         self.id = uuid.uuid4()
 
-        self.cache_path = os.path.join(cache_path, str(self.id))
+        self.cache_path = cache_path / str(self.id)
         os.makedirs(self.cache_path)
 
         self.captions_path = captions_path
@@ -29,23 +30,23 @@ class SubtitleService:
         else:
            self.device = "cpu"
 
-    def _extract_audio_from_video(self, video_url):
+    def _extract_audio_from_video(self, video_path: Path):
         # Create an AudioFileClip object
-        audio = AudioFileClip(video_url)
+        audio = AudioFileClip(video_path)
         
-        audio_file_path = os.path.join(self.cache_path, os.path.splitext(os.path.basename(video_url))[0] + '.mp3')
+        audio_file_path = self.cache_path / video_path.stem + '.mp3'
         
         # Write the audio to an .mp3 file
         audio.write_audiofile(audio_file_path)
         
         return audio_file_path
     
-    def _extract_vocals_from_audio(self, audio_url):
+    def _extract_vocals_from_audio(self, audio_path):
         # Using 'spleeter:2stems' pre-trained model for voice and accompaniment separation
         separator = Separator('spleeter:2stems')
         # Perform the separation and get the voice file
-        separator.separate_to_file(audio_url, self.cache_path)
-        vocals_file_path = os.path.join(self.cache_path, os.path.splitext(os.path.basename(audio_url))[0], 'vocals.wav')
+        separator.separate_to_file(audio_path, self.cache_path)
+        vocals_file_path = self.cache_path / audio_path.stem / 'vocals.wav'
 
         return vocals_file_path
     
@@ -102,23 +103,22 @@ class SubtitleService:
         result_aligned["language"] = result["language"]
         return result_aligned
 
-    def write_subtitle_file(self, file_path, result_aligned):
-      file_ext = os.path.splitext(file_path)[1]
+    def write_subtitle_file(self, file_path: Path, result_aligned):
       with open(file_path, "w") as f:
-        if file_ext == ".srt":
-          whisperx.utils.WriteSRT("captions/").write_result(result_aligned, f, {"highlight_words": False, "max_line_width": None, "max_line_count":None})
-        elif file_ext == ".vtt":
-          whisperx.utils.WriteVTT("captions/").write_result(result_aligned, f, {"highlight_words": False, "max_line_width": None, "max_line_count":None})
+        if file_path.suffix == ".srt":
+          whisperx.utils.WriteSRT(self.captions_path).write_result(result_aligned, f, {"highlight_words": False, "max_line_width": None, "max_line_count":None})
+        elif file_path.suffix == ".vtt":
+          whisperx.utils.WriteVTT(self.captions_path).write_result(result_aligned, f, {"highlight_words": False, "max_line_width": None, "max_line_count":None})
 
-    def write_subtitles(self, audio_file_path, sub_format, result_aligned):
+    def write_subtitles(self, audio_file_path: Path, sub_format, result_aligned):
       if sub_format == "all":
         for sel_format in ['srt', 'vtt']:
-          file_name = f'{os.path.splitext(os.path.basename(audio_file_path))[0]}.{sel_format}'
+          file_name = f'{audio_file_path.stem}.{sel_format}'
           file_path = os.path.join(self.captions_path, file_name)
           self.write_subtitle_file(file_path, result_aligned)
       else:
-        file_name = f'{os.path.splitext(os.path.basename(audio_file_path))[0]}.{sub_format.lower()}'
-        file_path = os.path.join(self.captions_path, file_name)
+        file_name = f'{audio_file_path.stem}.{sub_format.lower()}'
+        file_path = self.captions_path / file_name
         self.write_subtitle_file(file_path, result_aligned)
 
     def generate_subtitles_mock(self):

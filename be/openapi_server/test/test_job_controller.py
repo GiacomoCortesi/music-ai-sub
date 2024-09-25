@@ -5,9 +5,9 @@ from flask import json
 
 from openapi_server.models.job_request import JobRequest  # noqa: E501
 from openapi_server.models.job_response import JobResponse  # noqa: E501
-from openapi_server.services.job import JobNotFoundException
 from openapi_server.test import BaseTestCase
 
+from openapi_server.domain.services.job import JobNotFoundException
 
 class TestJobController(BaseTestCase):
     """JobController integration test stubs"""

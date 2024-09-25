@@ -220,7 +220,7 @@ paths:
           description: "The format to export the transcription in"
           required: false
           schema:
-            type: "string"    
+            type: "string"
             enum: [srt, stt]
       responses:
         '200':
@@ -239,7 +239,7 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: Unsupported format          
+                    example: Unsupported format
   /video:
     post:
       tags:
@@ -296,6 +296,13 @@ paths:
 
 components:
   schemas:
+    JobInfo:
+      type: object
+      properties:
+        config:
+          $ref: '#/components/schemas/JobConfig'
+        video_file:
+          type: string
     JobConfig:
       type: object
       properties:
@@ -327,10 +334,10 @@ components:
     JobResponse:
       type: object
       properties:
-        video_file:
+        job_id:
           type: string
         config:
-          $ref: '#/components/schemas/JobConfig'
+          $ref: '#/components/schemas/JobInfo'
         status:
           type: string
           enum:
@@ -341,6 +348,7 @@ components:
         data:
           $ref: '#/components/schemas/TranscriptionData'
       required:
+        - job_id
         - video_file
         - config
         - status
