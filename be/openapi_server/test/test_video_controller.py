@@ -3,8 +3,23 @@ import unittest
 from flask import json
 
 from openapi_server.models.video_get200_response_inner import VideoGet200ResponseInner  # noqa: E501
+from openapi_server.domain.models.file import File
 from openapi_server.test import BaseTestCase
 from unittest.mock import MagicMock
+from faker import Faker
+
+fake = Faker()
+
+def create_random_file() -> File:
+    return File(
+        video_name=fake.word(),
+        video_id=fake.uuid4(),
+        video_url=fake.url(),
+        image_url=fake.url(),
+        upload_date=fake.date_time_this_decade(),
+        video_path=fake.file_path(),
+        image_path=fake.file_path()
+    )
 
 class TestVideoController(BaseTestCase):
     """VideoController integration test stubs"""
@@ -18,8 +33,8 @@ class TestVideoController(BaseTestCase):
             'Accept': 'application/json',
         }
 
-        vs = self.app.config["video_service"]
-        vs.get_with_url = MagicMock(return_value = [VideoGet200ResponseInner()])
+        vs = self.app.config["file_service"]
+        vs.get = MagicMock(return_value = [create_random_file()])
 
         response = self.client.open(
             '/video',

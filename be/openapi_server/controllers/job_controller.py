@@ -1,14 +1,11 @@
 import connexion
-from typing import Dict
-from typing import Tuple
-from typing import Union
 
 from openapi_server.models.job_request import JobRequest  # noqa: E501
 from openapi_server.models.job_response import JobResponse  # noqa: E501
-from openapi_server import util
 
-from openapi_server.services.subtitle import SubtitleService
-from openapi_server.services.job import JobNotFoundException
+from openapi_server.domain.services.subtitle import SubtitleService
+from openapi_server.domain.services.job import JobNotFoundException
+from openapi_server.mappers.mappers import JobMapper
 from flask import current_app
 
 from connexion.problem import problem
@@ -23,7 +20,7 @@ def job_get():  # noqa: E501
     """
     job_service =  current_app.config['job_service']
     jobs = job_service.get_all()
-    return jobs, 200
+    return [JobMapper.map_to_api(domain_job) for domain_job in jobs], 200
 
 def job_job_id_get(job_id):  # noqa: E501
     """Get job details
@@ -42,7 +39,7 @@ def job_job_id_get(job_id):  # noqa: E501
         return problem(title="NotFound",
         detail="The requested job ID was not found on the server",
         status=404)
-    return job
+    return JobMapper.map_to_api(job)
 
 
 def job_post(job_request=None):  # noqa: E501
@@ -64,11 +61,11 @@ def job_post(job_request=None):  # noqa: E501
         subtitle_service = SubtitleService()
     
     job_service =  current_app.config['job_service']
-    video_service =  current_app.config['video_service']
+    file_service =  current_app.config['file_service']
 
     job_info = {"video_file": mais_job_post_request.video_file, "config": {"speaker_detection": subtitle_service.speaker_detection, "subtitles_frequency": subtitle_service.subtitles_frequency, "language": subtitle_service.language, "model_size": subtitle_service.model_size}}
-    # video = video_service.get(mais_job_post_request.video_file)
+    # video = file_service.get(mais_job_post_request.video_file)
     # TODO: eventyally handle subtitle generation in the job runner with a specific task. Multiple jobs that depend on each other? (e.g. subtitle gen job depends on vocal extraction etc.)
     # job = job_service.run(job_info, subtitle_service.generate_subtitles, video["video_path"])
     job = job_service.run(job_info, subtitle_service.generate_subtitles_mock)
-    return job
+    return JobMapper.map_to_api(job)

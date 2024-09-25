@@ -3,11 +3,11 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from openapi_server.models.base_model import Model
-from openapi_server.models.job_config import JobConfig
+from openapi_server.models.job_info import JobInfo
 from openapi_server.models.transcription_data import TranscriptionData
 from openapi_server import util
 
-from openapi_server.models.job_config import JobConfig  # noqa: E501
+from openapi_server.models.job_info import JobInfo  # noqa: E501
 from openapi_server.models.transcription_data import TranscriptionData  # noqa: E501
 
 class JobResponse(Model):
@@ -16,33 +16,33 @@ class JobResponse(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, video_file=None, config=None, status=None, data=None):  # noqa: E501
+    def __init__(self, job_id=None, config=None, status=None, data=None):  # noqa: E501
         """JobResponse - a model defined in OpenAPI
 
-        :param video_file: The video_file of this JobResponse.  # noqa: E501
-        :type video_file: str
+        :param job_id: The job_id of this JobResponse.  # noqa: E501
+        :type job_id: str
         :param config: The config of this JobResponse.  # noqa: E501
-        :type config: JobConfig
+        :type config: JobInfo
         :param status: The status of this JobResponse.  # noqa: E501
         :type status: str
         :param data: The data of this JobResponse.  # noqa: E501
         :type data: TranscriptionData
         """
         self.openapi_types = {
-            'video_file': str,
-            'config': JobConfig,
+            'job_id': str,
+            'config': JobInfo,
             'status': str,
             'data': TranscriptionData
         }
 
         self.attribute_map = {
-            'video_file': 'video_file',
+            'job_id': 'job_id',
             'config': 'config',
             'status': 'status',
             'data': 'data'
         }
 
-        self._video_file = video_file
+        self._job_id = job_id
         self._config = config
         self._status = status
         self._data = data
@@ -59,45 +59,45 @@ class JobResponse(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def video_file(self) -> str:
-        """Gets the video_file of this JobResponse.
+    def job_id(self) -> str:
+        """Gets the job_id of this JobResponse.
 
 
-        :return: The video_file of this JobResponse.
+        :return: The job_id of this JobResponse.
         :rtype: str
         """
-        return self._video_file
+        return self._job_id
 
-    @video_file.setter
-    def video_file(self, video_file: str):
-        """Sets the video_file of this JobResponse.
+    @job_id.setter
+    def job_id(self, job_id: str):
+        """Sets the job_id of this JobResponse.
 
 
-        :param video_file: The video_file of this JobResponse.
-        :type video_file: str
+        :param job_id: The job_id of this JobResponse.
+        :type job_id: str
         """
-        if video_file is None:
-            raise ValueError("Invalid value for `video_file`, must not be `None`")  # noqa: E501
+        if job_id is None:
+            raise ValueError("Invalid value for `job_id`, must not be `None`")  # noqa: E501
 
-        self._video_file = video_file
+        self._job_id = job_id
 
     @property
-    def config(self) -> JobConfig:
+    def config(self) -> JobInfo:
         """Gets the config of this JobResponse.
 
 
         :return: The config of this JobResponse.
-        :rtype: JobConfig
+        :rtype: JobInfo
         """
         return self._config
 
     @config.setter
-    def config(self, config: JobConfig):
+    def config(self, config: JobInfo):
         """Sets the config of this JobResponse.
 
 
         :param config: The config of this JobResponse.
-        :type config: JobConfig
+        :type config: JobInfo
         """
         if config is None:
             raise ValueError("Invalid value for `config`, must not be `None`")  # noqa: E501

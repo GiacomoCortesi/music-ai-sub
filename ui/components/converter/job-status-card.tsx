@@ -37,6 +37,7 @@ export default function JobStatus({ jobId, onStatusChange }: Props) {
     setJobInfo(config);
     setStatus(status);
     onStatusChange(status);
+    console.log(status);
 
     if (status === "finished") {
       clearInterval(intervalId);
@@ -75,7 +76,7 @@ export default function JobStatus({ jobId, onStatusChange }: Props) {
             <p>
               Generating subtitles for{" "}
               <span className="text-amber-300">{jobInfo.video_file}</span>
-              <br /> Current status:
+              <br /> Current status:{" "}
               <span
                 className={
                   status == "failed" ? "text-red-300" : "text-green-300"

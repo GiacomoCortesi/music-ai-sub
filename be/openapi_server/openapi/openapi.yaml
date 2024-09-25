@@ -321,6 +321,23 @@ paths:
       x-openapi-router-controller: openapi_server.controllers.video_controller
 components:
   schemas:
+    JobInfo:
+      example:
+        video_file: video_file
+        config:
+          speaker_detection: true
+          subtitles_frequency: 0
+          hugging_face_token: hugging_face_token
+          language: language
+          model_size: model_size
+      properties:
+        config:
+          $ref: '#/components/schemas/JobConfig'
+        video_file:
+          title: video_file
+          type: string
+      title: JobInfo
+      type: object
     JobConfig:
       example:
         speaker_detection: true
@@ -409,20 +426,22 @@ components:
             start: 5.962133916683182
             end: 5.637376656633329
             word: word
-        video_file: video_file
+        job_id: job_id
         config:
-          speaker_detection: true
-          subtitles_frequency: 0
-          hugging_face_token: hugging_face_token
-          language: language
-          model_size: model_size
+          video_file: video_file
+          config:
+            speaker_detection: true
+            subtitles_frequency: 0
+            hugging_face_token: hugging_face_token
+            language: language
+            model_size: model_size
         status: pending
       properties:
-        video_file:
-          title: video_file
+        job_id:
+          title: job_id
           type: string
         config:
-          $ref: '#/components/schemas/JobConfig'
+          $ref: '#/components/schemas/JobInfo'
         status:
           enum:
           - pending
@@ -435,6 +454,7 @@ components:
           $ref: '#/components/schemas/TranscriptionData'
       required:
       - config
+      - job_id
       - status
       - transcription
       - video_file

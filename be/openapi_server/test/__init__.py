@@ -4,9 +4,9 @@ import connexion
 from flask_testing import TestCase
 
 from openapi_server.encoder import JSONEncoder
-from openapi_server.services.job import JobService
-from openapi_server.services.video import VideoService
-from openapi_server.services.transcription import TranscriptionService
+from openapi_server.domain.services.job import JobService
+from openapi_server.domain.services.file import FileService
+from openapi_server.domain.services.transcription import TranscriptionService
 from fakeredis import FakeStrictRedis
 import os
 
@@ -18,7 +18,7 @@ class BaseTestCase(TestCase):
         app.add_api('openapi.yaml', pythonic_params=True)
         js = JobService(FakeStrictRedis())
         app.app.config.update({
-        'video_service': VideoService(),
+        'file_service': FileService(),
         'job_service': js,
         'transcription_service': TranscriptionService(os.environ.get('OPENAI_TOKEN', ""))
         })
