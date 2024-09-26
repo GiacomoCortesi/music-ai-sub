@@ -146,19 +146,16 @@ paths:
             schema:
               type: object
               properties:
-                data:
-                  $ref: '#/components/schemas/TranscriptionData'
-                job_id:
-                  type: string
-                video_file:
-                  type: string
+                schema:
+                  $ref: '#/components/schemas/TranscriptionRequest'
+
       responses:
         '200':
           description: Transcription succesfully created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Transcription'
+                $ref: '#/components/schemas/TranscriptionResponse'
         '400':
           description: Bad Request
           content:
@@ -193,7 +190,7 @@ paths:
               schema:
                 type: array
                 items:
-                    $ref: '#/components/schemas/Transcription'
+                    $ref: '#/components/schemas/TranscriptionResponse'
         '500':
           description: Internal Server Error
           content:
@@ -222,7 +219,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Transcription'
+                $ref: '#/components/schemas/TranscriptionResponse'
         '404':
           description: Bad Request
           content:
@@ -683,8 +680,18 @@ components:
         - start
         - end
         - text
+        
+    TranscriptionRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/TranscriptionData'
+        job_id:
+          type: string
+        video_file:
+          type: string
 
-    Transcription:
+    TranscriptionResponse:
       type: object
       properties:
         transcription_id:
