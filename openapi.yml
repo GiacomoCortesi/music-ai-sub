@@ -154,7 +154,7 @@ paths:
                   type: string
       responses:
         '200':
-          description: A successful response
+          description: Transcription succesfully created
           content:
             application/json:
               schema:
@@ -187,7 +187,7 @@ paths:
       summary: Fetch all transcriptions
       responses:
         '200':
-          description: A successful response
+          description: Transcriptions successfully retrieved
           content:
             application/json:
               schema:
@@ -218,7 +218,7 @@ paths:
             type: string
       responses:
         '200':
-          description: A successful response
+          description: Transcription successfully retrieved
           content:
             application/json:
               schema:
@@ -257,7 +257,7 @@ paths:
             type: string
       responses:
         '204':
-          description: A successful response
+          description: Transcription successfully deleted
         '404':
           description: Bad Request
           content:
@@ -301,7 +301,7 @@ paths:
                   $ref: '#/components/schemas/TranscriptionData'
       responses:
         '204':
-          description: A successful response
+          description: Transcriptions successfully edited
         '404':
           description: Bad Request
           content:
@@ -337,7 +337,7 @@ paths:
             type: string
       responses:
         '204':
-          description: A successful response
+          description: Transcription fix action succesfull
         '404':
           description: Bad Request
           content:
@@ -373,7 +373,7 @@ paths:
             type: string
       responses:
         '204':
-          description: A successful response
+          description: Transcription fit action succesfull
         '404':
           description: Bad Request
           content:
@@ -409,7 +409,7 @@ paths:
             type: string
       responses:
         '204':
-          description: A successful response
+          description: Transcription successfully cleared
         '404':
           description: Bad Request
           content:
@@ -508,7 +508,7 @@ paths:
                   format: binary
       responses:
         '200':
-          description: A successful response
+          description: File successfully uploaded
         '400':
           description: Bad Request
           content:
@@ -544,7 +544,7 @@ paths:
       summary: Delete uploaded video file(s)
       responses:
         '204':
-          description: A successful response
+          description: File successfully deleted
         '500':
           description: Internal Server Error
           content:
@@ -562,7 +562,7 @@ paths:
       summary: Retrieves the list of uploaded videos
       responses:
         '200':
-          description: A successful response
+          description: Files successfully retrieved
           content:
             application/json:
               schema:
