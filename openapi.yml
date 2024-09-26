@@ -3,18 +3,26 @@ info:
   title: AI Music Subtitles - OpenAPI 3.0
   description: |-
     AI Music to Subtitles API documentation
-  termsOfService: http://swagger.io/terms/
   contact:
+    name: Giacomo Cortesi
+    url: https://giacomocortesi.github.io/hugo-gc
     email: giacomo.cortesi1993@gmail.com
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.0.11
-externalDocs:
-  description: Find out more about Swagger
-  url: http://swagger.io
+  version: 1.0.0
 servers:
-  - url: https://localhost:8000
+- url: http://{username}:{port}
+  description: API server
+  variables:
+    username:
+      default: localhost
+    port:
+      enum:
+        - '8080'
+        - '443'
+      default: '8080'
+
 tags:
   - name: job
     description: Music AI subtitles generator jobs
@@ -40,6 +48,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/JobResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                title: "Bad Request"
+                detail: "'test' is not of type 'boolean' - 'config.speaker_detection'"
+                status: 400
+                type: "about:blank"
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                title: "Internal Server Error"
+                detail: "Unexpected error'"
+                status: 500
+                type: "about:blank"              
     get:
       tags:
         - job
@@ -53,13 +83,24 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/JobResponse'
-  /job/{job_id}:
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                title: "Internal Server Error"
+                detail: "Unexpected error'"
+                status: 500
+                type: "about:blank"                    
+  /job/{id}:
     get:
       tags:
         - job
       summary: Get job details
       parameters:
-       - name: job_id
+       - name: id
          in: path
          required: true
          schema:
@@ -71,6 +112,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/JobResponse'
+        '404':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                title: "NotFound"
+                detail: "The requested job ID was not found on the server"
+                status: 404
+                type: "about:blank"
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                title: "Internal Server Error"
+                detail: "Unexpected error'"
+                status: 500
+                type: "about:blank"                  
   /transcription:
     post:
       tags:
@@ -96,6 +159,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Transcription'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                title: "Bad Request"
+                detail: "Bad Request"
+                status: 400
+                type: "about:blank"
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                title: "Internal Server Error"
+                detail: "Unexpected error'"
+                status: 500
+                type: "about:blank"                     
     get:
       tags:
         - transcription
@@ -109,6 +194,17 @@ paths:
                 type: array
                 items:
                     $ref: '#/components/schemas/Transcription'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                title: "Internal Server Error"
+                detail: "Unexpected error'"
+                status: 500
+                type: "about:blank"                           
   /transcription/{transcription_id}:
     get:
       tags:
@@ -127,6 +223,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Transcription'
+        '404':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                title: "NotFound"
+                detail: "The requested transcription ID was not found on the server"
+                status: 404
+                type: "about:blank"
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                title: "Internal Server Error"
+                detail: "Unexpected error'"
+                status: 500
+                type: "about:blank"                  
     delete:
       tags:
         - transcription
@@ -140,6 +258,28 @@ paths:
       responses:
         '204':
           description: A successful response
+        '404':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                title: "NotFound"
+                detail: "The requested transcription ID was not found on the server"
+                status: 404
+                type: "about:blank"
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                title: "Internal Server Error"
+                detail: "Unexpected error'"
+                status: 500
+                type: "about:blank"            
     patch:
       tags:
         - transcription
@@ -162,6 +302,28 @@ paths:
       responses:
         '204':
           description: A successful response
+        '404':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                title: "NotFound"
+                detail: "The requested transcription ID was not found on the server"
+                status: 404
+                type: "about:blank"
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                title: "Internal Server Error"
+                detail: "Unexpected error'"
+                status: 500
+                type: "about:blank"          
   /transcription/{transcription_id}/fix:
     post:
       tags:
@@ -176,6 +338,28 @@ paths:
       responses:
         '204':
           description: A successful response
+        '404':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                title: "NotFound"
+                detail: "The requested transcription ID was not found on the server"
+                status: 404
+                type: "about:blank"
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                title: "Internal Server Error"
+                detail: "Unexpected error'"
+                status: 500
+                type: "about:blank"          
   /transcription/{transcription_id}/fit:
     post:
       tags:
@@ -190,6 +374,28 @@ paths:
       responses:
         '204':
           description: A successful response
+        '404':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                title: "NotFound"
+                detail: "The requested transcription ID was not found on the server"
+                status: 404
+                type: "about:blank"
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                title: "Internal Server Error"
+                detail: "Unexpected error'"
+                status: 500
+                type: "about:blank"            
   /transcription/{transcription_id}/clear:
     post:
       tags:
@@ -204,6 +410,28 @@ paths:
       responses:
         '204':
           description: A successful response
+        '404':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                title: "NotFound"
+                detail: "The requested transcription ID was not found on the server"
+                status: 404
+                type: "about:blank"
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                title: "Internal Server Error"
+                detail: "Unexpected error'"
+                status: 500
+                type: "about:blank"          
   /transcription/{transcription_id}/export:
     get:
       tags:
@@ -233,13 +461,36 @@ paths:
         '400':
           description: Unsupported format
           content:
-            application/json:
+            application/problem+json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    example: Unsupported format
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                title: "BadRequest"
+                detail: "Unsupported export format"
+                status: 400
+                type: "about:blank"
+        '404':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                title: "NotFound"
+                detail: "The requested transcription ID was not found on the server"
+                status: 404
+                type: "about:blank"
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                title: "Internal Server Error"
+                detail: "Unexpected error'"
+                status: 500
+                type: "about:blank"                         
   /video:
     post:
       tags:
@@ -258,6 +509,28 @@ paths:
       responses:
         '200':
           description: A successful response
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                title: "BadRequest"
+                detail: "Filename missing'"
+                status: 500
+                type: "about:blank"              
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                title: "Internal Server Error"
+                detail: "Unexpected error'"
+                status: 500
+                type: "about:blank"          
     delete:
       tags:
         - video
@@ -270,8 +543,19 @@ paths:
             type: "string"
       summary: Delete uploaded video file(s)
       responses:
-        '200':
+        '204':
           description: A successful response
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                title: "Internal Server Error"
+                detail: "Unexpected error'"
+                status: 500
+                type: "about:blank"        
     get:
       tags:
         - video
@@ -293,6 +577,17 @@ paths:
                     upload_date:
                       type: string
                       format: date-time
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                title: "Internal Server Error"
+                detail: "Unexpected error'"
+                status: 500
+                type: "about:blank"                        
 
 components:
   schemas:
@@ -415,3 +710,15 @@ components:
           type: string
       required:
         - segments
+    ErrorModel:
+      type: object
+      properties:
+        title:
+          type: string
+        detail:
+          type: string
+        status:
+          type: integer
+        type:
+          type: string
+        
