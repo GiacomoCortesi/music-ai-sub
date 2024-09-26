@@ -28,8 +28,8 @@ tags:
     description: Music AI subtitles generator jobs
   - name: transcription
     description: Transcription CRUD operations
-  - name: video
-    description: Video files CRUD operations
+  - name: file
+    description: Audio/Video files CRUD operations
 paths:
   /job:
     post:
@@ -202,13 +202,13 @@ paths:
                 detail: "Unexpected error'"
                 status: 500
                 type: "about:blank"                           
-  /transcription/{transcription_id}:
+  /transcription/{id}:
     get:
       tags:
         - transcription
       summary: Retrieves a specific transcription
       parameters:
-        - name: transcription_id
+        - name: id
           in: path
           required: true
           schema:
@@ -247,7 +247,7 @@ paths:
         - transcription
       summary: Deletes a specific transcription
       parameters:
-        - name: transcription_id
+        - name: id
           in: path
           required: true
           schema:
@@ -282,7 +282,7 @@ paths:
         - transcription
       summary: Edit a specific transcription
       parameters:
-        - name: transcription_id
+        - name: id
           in: path
           required: true
           schema:
@@ -321,13 +321,13 @@ paths:
                 detail: "Unexpected error'"
                 status: 500
                 type: "about:blank"          
-  /transcription/{transcription_id}/fix:
+  /transcription/{id}/fix:
     post:
       tags:
         - transcription
       summary: Attempts to fix all subtitles text with AI
       parameters:
-        - name: transcription_id
+        - name: id
           in: path
           required: true
           schema:
@@ -357,13 +357,13 @@ paths:
                 detail: "Unexpected error'"
                 status: 500
                 type: "about:blank"          
-  /transcription/{transcription_id}/fit:
+  /transcription/{id}/fit:
     post:
       tags:
         - transcription
       summary: Fit start and end of each subtitles segment
       parameters:
-        - name: transcription_id
+        - name: id
           in: path
           required: true
           schema:
@@ -393,13 +393,13 @@ paths:
                 detail: "Unexpected error'"
                 status: 500
                 type: "about:blank"            
-  /transcription/{transcription_id}/clear:
+  /transcription/{id}/clear:
     post:
       tags:
         - transcription
       summary: Restores initial transcription
       parameters:
-        - name: transcription_id
+        - name: id
           in: path
           required: true
           schema:
@@ -429,13 +429,13 @@ paths:
                 detail: "Unexpected error'"
                 status: 500
                 type: "about:blank"          
-  /transcription/{transcription_id}/export:
+  /transcription/{id}/export:
     get:
       tags:
         - transcription
       summary: Export transcription in several subtitle formats
       parameters:
-        - name: transcription_id
+        - name: id
           in: path
           required: true
           schema:
@@ -488,11 +488,11 @@ paths:
                 detail: "Unexpected error'"
                 status: 500
                 type: "about:blank"                         
-  /video:
+  /file:
     post:
       tags:
-        - video
-      summary: Uploads a video file
+        - file
+      summary: Uploads a video or audio file
       requestBody:
         required: true
         content:
@@ -516,7 +516,7 @@ paths:
                 title: "BadRequest"
                 detail: "Filename missing'"
                 status: 500
-                type: "about:blank"              
+                type: "about:blank"           
         '500':
           description: Internal Server Error
           content:
@@ -530,15 +530,15 @@ paths:
                 type: "about:blank"          
     delete:
       tags:
-        - video
+        - file
       parameters:
         - name: "filename"
           in: "query"
-          description: "Filename of the video to be deleted, if no filename, all uploaded videos are deleted"
+          description: "Filename of the audio or video file to be deleted, if no filename, all uploaded files are deleted"
           required: false
           schema:
             type: "string"
-      summary: Delete uploaded video file(s)
+      summary: Delete uploaded file(s)
       responses:
         '204':
           description: File successfully deleted
@@ -555,8 +555,8 @@ paths:
                 type: "about:blank"        
     get:
       tags:
-        - video
-      summary: Retrieves the list of uploaded videos
+        - file
+      summary: Retrieves the list of uploaded files
       responses:
         '200':
           description: Files successfully retrieved
@@ -565,15 +565,7 @@ paths:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    video_id:
-                      type: string
-                    video_name:
-                      type: string
-                    upload_date:
-                      type: string
-                      format: date-time
+                  $ref: '#/components/schemas/FileResponse'
         '500':
           description: Internal Server Error
           content:
@@ -593,7 +585,7 @@ components:
       properties:
         config:
           $ref: '#/components/schemas/JobConfig'
-        video_file:
+        filename:
           type: string
     JobConfig:
       type: object
@@ -606,29 +598,26 @@ components:
           type: string
         speaker_detection:
           type: boolean
-        hugging_face_token:
-          type: string
       required:
         - model_size
         - subtitles_frequency
         - language
         - speaker_detection
-        - hugging_face_token
     JobRequest:
       type: object
       properties:
-        video_file:
+        filename:
           type: string
         config:
           $ref: '#/components/schemas/JobConfig'
       required:
-        - video_file
+        - filename
     JobResponse:
       type: object
       properties:
-        job_id:
+        id:
           type: string
-        config:
+        info:
           $ref: '#/components/schemas/JobInfo'
         status:
           type: string
@@ -640,11 +629,11 @@ components:
         data:
           $ref: '#/components/schemas/TranscriptionData'
       required:
-        - job_id
-        - video_file
+        - id
+        - filename
         - config
         - status
-        - transcription
+        - data
     Word:
       type: object
       properties:
@@ -688,19 +677,19 @@ components:
           $ref: '#/components/schemas/TranscriptionData'
         job_id:
           type: string
-        video_file:
+        filename:
           type: string
 
     TranscriptionResponse:
       type: object
       properties:
-        transcription_id:
+        id:
           type: string
         data:
           $ref: '#/components/schemas/TranscriptionData'
         job_id:
           type: string
-        video_file:
+        filename:
           type: string
     TranscriptionData:
       type: object
@@ -717,6 +706,16 @@ components:
           type: string
       required:
         - segments
+    FileResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        filename:
+          type: string
+        upload_date:
+          type: string
+          format: date-time
     ErrorModel:
       type: object
       properties:
