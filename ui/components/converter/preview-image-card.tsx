@@ -3,7 +3,7 @@ import { AiFillCloseCircle } from "react-icons/ai";
 import { Button } from "@nextui-org/button";
 import { usePathname, useRouter } from "next/navigation";
 
-import { deleteVideo } from "@/actions/video";
+import { deleteFile } from "@/actions/file";
 
 import PreviewImage from "./preview-image";
 
@@ -23,7 +23,7 @@ export default function PreviewImageCard({
   const router = useRouter();
   const pathName = usePathname();
 
-  const deleteVideoWithName = deleteVideo.bind(null, alt);
+  const deleteVideoWithName = deleteFile.bind(null, alt);
 
   const onDeleteButtonClick = () => {
     deleteVideoWithName();

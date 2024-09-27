@@ -22,7 +22,7 @@ export default async function Page({ params }: { params: { id: string } }) {
       <SubtitleEditor
         defaultSegments={transcription.data.segments}
         language={transcription.data.language}
-        transcriptionId={transcription.transcription_id}
+        transcriptionId={transcription.id}
         wordSegments={transcription.data.word_segments}
       />
     </div>

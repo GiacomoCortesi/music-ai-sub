@@ -5,7 +5,7 @@ import { ChangeEvent } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useState } from "react";
 
-import { uploadVideo } from "@/actions/video";
+import { uploadFile } from "@/actions/file";
 
 export default function FileUpload() {
   const router = useRouter();
@@ -22,7 +22,7 @@ export default function FileUpload() {
 
     data.set("file", selectedFile);
 
-    await uploadVideo(data);
+    await uploadFile(data);
 
     // Update the URL's search parameters
     const newSearchParams = new URLSearchParams();

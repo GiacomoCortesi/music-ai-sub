@@ -1,5 +1,5 @@
 export interface IVideoFile {
-  video_id: string;
-  video_name: string;
+  id: string;
+  filename: string;
   image_url: string;
 }

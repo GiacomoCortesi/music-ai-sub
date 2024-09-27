@@ -17,7 +17,7 @@ export default function JobStatus({ jobId, onStatusChange }: Props) {
   const router = useRouter();
   const [status, setStatus] = useState(null);
   const [jobInfo, setJobInfo] = useState<ISubtitleJobConfig>({
-    video_file: "",
+    filename: "",
     config: {
       speaker_detection: false,
       subtitles_frequency: 0,
@@ -32,19 +32,18 @@ export default function JobStatus({ jobId, onStatusChange }: Props) {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/job/${jobId}`
     );
-    const { status, config, data } = await response.json();
+    const { status, info, data } = await response.json();
 
-    setJobInfo(config);
+    setJobInfo(info);
     setStatus(status);
     onStatusChange(status);
-    console.log(status);
 
     if (status === "finished") {
       clearInterval(intervalId);
-      const { transcription_id: transcriptionId } = await createTranscription(
+      const { id: transcriptionId } = await createTranscription(
         data,
         jobId,
-        config.video_file
+        info.filename
       );
 
       router.push(`/transcription/${transcriptionId}`);
@@ -75,7 +74,7 @@ export default function JobStatus({ jobId, onStatusChange }: Props) {
           <CardBody>
             <p>
               Generating subtitles for{" "}
-              <span className="text-amber-300">{jobInfo.video_file}</span>
+              <span className="text-amber-300">{jobInfo.filename}</span>
               <br /> Current status:{" "}
               <span
                 className={

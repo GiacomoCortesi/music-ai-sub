@@ -8,7 +8,7 @@ import {
 export async function createTranscription(
   transcription: string,
   jobId: string,
-  videoFile: string,
+  videoFile: string
 ) {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/transcription`, {
     method: "POST",
@@ -16,7 +16,7 @@ export async function createTranscription(
     body: JSON.stringify({
       data: transcription,
       job_id: jobId,
-      video_file: videoFile,
+      filename: videoFile,
     }),
   });
 
@@ -32,7 +32,7 @@ export async function clearTranscription(transcriptionId: string) {
     `${process.env.NEXT_PUBLIC_API_URL}/transcription/${transcriptionId}/clear`,
     {
       method: "POST",
-    },
+    }
   );
 
   if (!res.ok) throw new Error(await res.text());
@@ -44,7 +44,7 @@ export async function fitTranscription(transcriptionId: string) {
     `${process.env.NEXT_PUBLIC_API_URL}/transcription/${transcriptionId}/fit`,
     {
       method: "POST",
-    },
+    }
   );
 
   if (!res.ok) throw new Error(await res.text());
@@ -56,7 +56,7 @@ export async function fixTranscription(transcriptionId: string) {
     `${process.env.NEXT_PUBLIC_API_URL}/transcription/${transcriptionId}/fix`,
     {
       method: "POST",
-    },
+    }
   );
 
   if (!res.ok) throw new Error(await res.text());
@@ -65,7 +65,7 @@ export async function fixTranscription(transcriptionId: string) {
 
 export async function editTranscription(
   transcriptionId: string,
-  transcription: ITranscriptionData,
+  transcription: ITranscriptionData
 ) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/transcription/${transcriptionId}`,
@@ -73,7 +73,7 @@ export async function editTranscription(
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ data: transcription }),
-    },
+    }
   );
 
   if (!res.ok) throw new Error(await res.text());
@@ -86,7 +86,7 @@ export async function deleteTranscription(transcriptionId: string) {
     `${process.env.NEXT_PUBLIC_API_URL}/transcription/${transcriptionId}`,
     {
       method: "DELETE",
-    },
+    }
   );
 
   if (!res.ok) throw new Error(await res.text());

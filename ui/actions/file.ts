@@ -1,11 +1,11 @@
 import { revalidateVideoFiles } from "./revalidateActions";
 
-export async function deleteVideo(filename: string) {
+export async function deleteFile(filename: string) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/video?filename=${filename}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/file?filename=${filename}`,
     {
       method: "DELETE",
-    },
+    }
   );
 
   if (!res.ok) throw new Error(await res.text());
@@ -13,8 +13,8 @@ export async function deleteVideo(filename: string) {
   revalidateVideoFiles();
 }
 
-export async function uploadVideo(formData: FormData) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/video`, {
+export async function uploadFile(formData: FormData) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/file`, {
     method: "POST",
     body: formData,
   });
