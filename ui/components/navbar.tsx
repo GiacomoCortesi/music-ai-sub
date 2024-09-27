@@ -70,13 +70,21 @@ export const Navbar = () => {
         ))}
       </NavbarContent>
 
-      <NavbarContent className="" justify="end">
+      <NavbarContent className="" justify="center">
         <NavbarItem className="">
           <Link isExternal aria-label="Github" href={siteConfig.links.github}>
             <GithubIcon className="text-default-500" />
           </Link>
         </NavbarItem>
         <ThemeSwitch />
+      </NavbarContent>
+
+      <NavbarContent className="" justify="end">
+        <NavbarItem className="">
+          <Link isExternal aria-label="API" href={siteConfig.links.api}>
+            API
+          </Link>
+        </NavbarItem>
       </NavbarContent>
 
       <NavbarMenu>
