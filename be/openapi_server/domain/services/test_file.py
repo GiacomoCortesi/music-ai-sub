@@ -13,8 +13,8 @@ fake = Faker()
 
 def create_random_file() -> File:
     return File(
-        video_name=fake.word(),
-        video_id=fake.uuid4(),
+        filename=fake.word(),
+        id=fake.uuid4(),
         video_url=fake.url(),
         image_url=fake.url(),
         upload_date=fake.date_time_this_decade(),

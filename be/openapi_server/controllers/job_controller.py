@@ -22,19 +22,19 @@ def job_get():  # noqa: E501
     jobs = job_service.get_all()
     return [JobMapper.map_to_api(domain_job) for domain_job in jobs], 200
 
-def job_job_id_get(job_id):  # noqa: E501
+def job_id_get(id_):  # noqa: E501
     """Get job details
 
      # noqa: E501
 
-    :param job_id: 
-    :type job_id: str
+    :param id:
+    :type id: str
 
     :rtype: Union[JobResponse, Tuple[JobResponse, int], Tuple[JobResponse, int, Dict[str, str]]
     """
     job_service =  current_app.config['job_service']
     try:
-        job = job_service.get(job_id)
+        job = job_service.get(id_)
     except JobNotFoundException:
         return problem(title="NotFound",
         detail="The requested job ID was not found on the server",
@@ -63,8 +63,8 @@ def job_post(job_request=None):  # noqa: E501
     job_service =  current_app.config['job_service']
     file_service =  current_app.config['file_service']
 
-    job_info = {"video_file": mais_job_post_request.video_file, "config": {"speaker_detection": subtitle_service.speaker_detection, "subtitles_frequency": subtitle_service.subtitles_frequency, "language": subtitle_service.language, "model_size": subtitle_service.model_size}}
-    # video = file_service.get(mais_job_post_request.video_file)
+    job_info = {"filename": mais_job_post_request.filename, "config": {"speaker_detection": subtitle_service.speaker_detection, "subtitles_frequency": subtitle_service.subtitles_frequency, "language": subtitle_service.language, "model_size": subtitle_service.model_size}}
+    # video = file_service.get(mais_job_post_request.filename)
     # TODO: eventyally handle subtitle generation in the job runner with a specific task. Multiple jobs that depend on each other? (e.g. subtitle gen job depends on vocal extraction etc.)
     # job = job_service.run(job_info, subtitle_service.generate_subtitles, video["video_path"])
     job = job_service.run(job_info, subtitle_service.generate_subtitles_mock)

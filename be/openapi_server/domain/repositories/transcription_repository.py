@@ -18,9 +18,9 @@ class InMemoryTranscriptionRepository(TranscriptionRepository):
         return self.transcriptions.get(id, None)
 
     def add(self, transcription: Transcription) -> None:
-        if not transcription.transcription_id:
-            transcription.transcription_id = str(uuid.uuid())
-        self.transcriptions[transcription.transcription_id] = transcription
+        if not transcription.id:
+            transcription.id = str(uuid.uuid())
+        self.transcriptions[transcription.id] = transcription
     
     def delete(self, id: ID) -> None:
         self.transcriptions.pop(id, None)
@@ -29,4 +29,4 @@ class InMemoryTranscriptionRepository(TranscriptionRepository):
         self.transcriptions = {}
     
     def update(self, f: Transcription) -> None:
-        self.transcriptions[f.transcription_id] = f
+        self.transcriptions[f.id] = f

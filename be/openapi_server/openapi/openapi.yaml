@@ -2,26 +2,127 @@ openapi: 3.0.3
 info:
   contact:
     email: giacomo.cortesi1993@gmail.com
+    name: Giacomo Cortesi
+    url: https://giacomocortesi.github.io/hugo-gc
   description: AI Music to Subtitles API documentation
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: http://swagger.io/terms/
   title: AI Music Subtitles - OpenAPI 3.0
-  version: 1.0.11
-externalDocs:
-  description: Find out more about Swagger
-  url: http://swagger.io
+  version: 1.0.0
 servers:
-- url: https://localhost:8000
+- description: API server
+  url: "http://{username}:{port}"
+  variables:
+    username:
+      default: localhost
+    port:
+      default: "8080"
+      enum:
+      - "8080"
+      - "443"
 tags:
 - description: Music AI subtitles generator jobs
   name: job
 - description: Transcription CRUD operations
   name: transcription
-- description: Video files CRUD operations
-  name: video
+- description: Audio/Video files CRUD operations
+  name: file
 paths:
+  /file:
+    delete:
+      operationId: file_delete
+      parameters:
+      - description: "Filename of the audio or video file to be deleted, if no filename,\
+          \ all uploaded files are deleted"
+        explode: true
+        in: query
+        name: filename
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "204":
+          description: File successfully deleted
+        "500":
+          content:
+            application/problem+json:
+              example:
+                title: Internal Server Error
+                detail: Unexpected error'
+                status: 500
+                type: about:blank
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Internal Server Error
+      summary: Delete uploaded file(s)
+      tags:
+      - file
+      x-openapi-router-controller: openapi_server.controllers.file_controller
+    get:
+      operationId: file_get
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/FileResponse'
+                type: array
+          description: Files successfully retrieved
+        "500":
+          content:
+            application/problem+json:
+              example:
+                title: Internal Server Error
+                detail: Unexpected error'
+                status: 500
+                type: about:blank
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Internal Server Error
+      summary: Retrieves the list of uploaded files
+      tags:
+      - file
+      x-openapi-router-controller: openapi_server.controllers.file_controller
+    post:
+      operationId: file_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/_file_post_request'
+        required: true
+      responses:
+        "200":
+          description: File successfully uploaded
+        "400":
+          content:
+            application/problem+json:
+              example:
+                title: BadRequest
+                detail: Filename missing'
+                status: 500
+                type: about:blank
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Bad Request
+        "500":
+          content:
+            application/problem+json:
+              example:
+                title: Internal Server Error
+                detail: Unexpected error'
+                status: 500
+                type: about:blank
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Internal Server Error
+      summary: Uploads a video or audio file
+      tags:
+      - file
+      x-openapi-router-controller: openapi_server.controllers.file_controller
   /job:
     get:
       operationId: job_get
@@ -34,6 +135,17 @@ paths:
                   $ref: '#/components/schemas/JobResponse'
                 type: array
           description: Jobs details successfully retrieved
+        "500":
+          content:
+            application/problem+json:
+              example:
+                title: Internal Server Error
+                detail: Unexpected error'
+                status: 500
+                type: about:blank
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Internal Server Error
       summary: Get all job details
       tags:
       - job
@@ -52,17 +164,39 @@ paths:
               schema:
                 $ref: '#/components/schemas/JobResponse'
           description: Subtitles generation job successfully created
+        "400":
+          content:
+            application/problem+json:
+              example:
+                title: Bad Request
+                detail: '''test'' is not of type ''boolean'' - ''config.speaker_detection'''
+                status: 400
+                type: about:blank
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Bad Request
+        "500":
+          content:
+            application/problem+json:
+              example:
+                title: Internal Server Error
+                detail: Unexpected error'
+                status: 500
+                type: about:blank
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Internal Server Error
       summary: Create a new subtitles generation job
       tags:
       - job
       x-openapi-router-controller: openapi_server.controllers.job_controller
-  /job/{job_id}:
+  /job/{id}:
     get:
-      operationId: job_job_id_get
+      operationId: job_id_get
       parameters:
       - explode: false
         in: path
-        name: job_id
+        name: id
         required: true
         schema:
           type: string
@@ -74,6 +208,28 @@ paths:
               schema:
                 $ref: '#/components/schemas/JobResponse'
           description: Job details successfully retrieved
+        "404":
+          content:
+            application/problem+json:
+              example:
+                title: NotFound
+                detail: The requested job ID was not found on the server
+                status: 404
+                type: about:blank
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Bad Request
+        "500":
+          content:
+            application/problem+json:
+              example:
+                title: Internal Server Error
+                detail: Unexpected error'
+                status: 500
+                type: about:blank
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Internal Server Error
       summary: Get job details
       tags:
       - job
@@ -87,9 +243,20 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/Transcription'
+                  $ref: '#/components/schemas/TranscriptionResponse'
                 type: array
-          description: A successful response
+          description: Transcriptions successfully retrieved
+        "500":
+          content:
+            application/problem+json:
+              example:
+                title: Internal Server Error
+                detail: Unexpected error'
+                status: 500
+                type: about:blank
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Internal Server Error
       summary: Fetch all transcriptions
       tags:
       - transcription
@@ -107,36 +274,80 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Transcription'
-          description: A successful response
+                $ref: '#/components/schemas/TranscriptionResponse'
+          description: Transcription succesfully created
+        "400":
+          content:
+            application/problem+json:
+              example:
+                title: Bad Request
+                detail: Bad Request
+                status: 400
+                type: about:blank
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Bad Request
+        "500":
+          content:
+            application/problem+json:
+              example:
+                title: Internal Server Error
+                detail: Unexpected error'
+                status: 500
+                type: about:blank
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Internal Server Error
       summary: Creates a new transcription
       tags:
       - transcription
       x-openapi-router-controller: openapi_server.controllers.transcription_controller
-  /transcription/{transcription_id}:
+  /transcription/{id}:
     delete:
-      operationId: transcription_transcription_id_delete
+      operationId: transcription_id_delete
       parameters:
       - explode: false
         in: path
-        name: transcription_id
+        name: id
         required: true
         schema:
           type: string
         style: simple
       responses:
         "204":
-          description: A successful response
+          description: Transcription successfully deleted
+        "404":
+          content:
+            application/problem+json:
+              example:
+                title: NotFound
+                detail: The requested transcription ID was not found on the server
+                status: 404
+                type: about:blank
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Bad Request
+        "500":
+          content:
+            application/problem+json:
+              example:
+                title: Internal Server Error
+                detail: Unexpected error'
+                status: 500
+                type: about:blank
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Internal Server Error
       summary: Deletes a specific transcription
       tags:
       - transcription
       x-openapi-router-controller: openapi_server.controllers.transcription_controller
     get:
-      operationId: transcription_transcription_id_get
+      operationId: transcription_id_get
       parameters:
       - explode: false
         in: path
-        name: transcription_id
+        name: id
         required: true
         schema:
           type: string
@@ -146,18 +357,40 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Transcription'
-          description: A successful response
+                $ref: '#/components/schemas/TranscriptionResponse'
+          description: Transcription successfully retrieved
+        "404":
+          content:
+            application/problem+json:
+              example:
+                title: NotFound
+                detail: The requested transcription ID was not found on the server
+                status: 404
+                type: about:blank
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Bad Request
+        "500":
+          content:
+            application/problem+json:
+              example:
+                title: Internal Server Error
+                detail: Unexpected error'
+                status: 500
+                type: about:blank
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Internal Server Error
       summary: Retrieves a specific transcription
       tags:
       - transcription
       x-openapi-router-controller: openapi_server.controllers.transcription_controller
     patch:
-      operationId: transcription_transcription_id_patch
+      operationId: transcription_id_patch
       parameters:
       - explode: false
         in: path
-        name: transcription_id
+        name: id
         required: true
         schema:
           type: string
@@ -166,40 +399,84 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/_transcription__transcription_id__patch_request'
+              $ref: '#/components/schemas/_transcription__id__patch_request'
         required: true
       responses:
         "204":
-          description: A successful response
+          description: Transcriptions successfully edited
+        "404":
+          content:
+            application/problem+json:
+              example:
+                title: NotFound
+                detail: The requested transcription ID was not found on the server
+                status: 404
+                type: about:blank
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Bad Request
+        "500":
+          content:
+            application/problem+json:
+              example:
+                title: Internal Server Error
+                detail: Unexpected error'
+                status: 500
+                type: about:blank
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Internal Server Error
       summary: Edit a specific transcription
       tags:
       - transcription
       x-openapi-router-controller: openapi_server.controllers.transcription_controller
-  /transcription/{transcription_id}/clear:
+  /transcription/{id}/clear:
     post:
-      operationId: transcription_transcription_id_clear_post
+      operationId: transcription_id_clear_post
       parameters:
       - explode: false
         in: path
-        name: transcription_id
+        name: id
         required: true
         schema:
           type: string
         style: simple
       responses:
         "204":
-          description: A successful response
+          description: Transcription successfully cleared
+        "404":
+          content:
+            application/problem+json:
+              example:
+                title: NotFound
+                detail: The requested transcription ID was not found on the server
+                status: 404
+                type: about:blank
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Bad Request
+        "500":
+          content:
+            application/problem+json:
+              example:
+                title: Internal Server Error
+                detail: Unexpected error'
+                status: 500
+                type: about:blank
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Internal Server Error
       summary: Restores initial transcription
       tags:
       - transcription
       x-openapi-router-controller: openapi_server.controllers.transcription_controller
-  /transcription/{transcription_id}/export:
+  /transcription/{id}/export:
     get:
-      operationId: transcription_transcription_id_export_get
+      operationId: transcription_id_export_get
       parameters:
       - explode: false
         in: path
-        name: transcription_id
+        name: id
         required: true
         schema:
           type: string
@@ -225,116 +502,136 @@ paths:
           description: Successful export
         "400":
           content:
-            application/json:
+            application/problem+json:
+              example:
+                title: BadRequest
+                detail: Unsupported export format
+                status: 400
+                type: about:blank
               schema:
-                $ref: '#/components/schemas/_transcription__transcription_id__export_get_400_response'
+                $ref: '#/components/schemas/ErrorModel'
           description: Unsupported format
+        "404":
+          content:
+            application/problem+json:
+              example:
+                title: NotFound
+                detail: The requested transcription ID was not found on the server
+                status: 404
+                type: about:blank
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Bad Request
+        "500":
+          content:
+            application/problem+json:
+              example:
+                title: Internal Server Error
+                detail: Unexpected error'
+                status: 500
+                type: about:blank
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Internal Server Error
       summary: Export transcription in several subtitle formats
       tags:
       - transcription
       x-openapi-router-controller: openapi_server.controllers.transcription_controller
-  /transcription/{transcription_id}/fit:
+  /transcription/{id}/fit:
     post:
-      operationId: transcription_transcription_id_fit_post
+      operationId: transcription_id_fit_post
       parameters:
       - explode: false
         in: path
-        name: transcription_id
+        name: id
         required: true
         schema:
           type: string
         style: simple
       responses:
         "204":
-          description: A successful response
+          description: Transcription fit action succesfull
+        "404":
+          content:
+            application/problem+json:
+              example:
+                title: NotFound
+                detail: The requested transcription ID was not found on the server
+                status: 404
+                type: about:blank
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Bad Request
+        "500":
+          content:
+            application/problem+json:
+              example:
+                title: Internal Server Error
+                detail: Unexpected error'
+                status: 500
+                type: about:blank
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Internal Server Error
       summary: Fit start and end of each subtitles segment
       tags:
       - transcription
       x-openapi-router-controller: openapi_server.controllers.transcription_controller
-  /transcription/{transcription_id}/fix:
+  /transcription/{id}/fix:
     post:
-      operationId: transcription_transcription_id_fix_post
+      operationId: transcription_id_fix_post
       parameters:
       - explode: false
         in: path
-        name: transcription_id
+        name: id
         required: true
         schema:
           type: string
         style: simple
       responses:
         "204":
-          description: A successful response
+          description: Transcription fix action succesfull
+        "404":
+          content:
+            application/problem+json:
+              example:
+                title: NotFound
+                detail: The requested transcription ID was not found on the server
+                status: 404
+                type: about:blank
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Bad Request
+        "500":
+          content:
+            application/problem+json:
+              example:
+                title: Internal Server Error
+                detail: Unexpected error'
+                status: 500
+                type: about:blank
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Internal Server Error
       summary: Attempts to fix all subtitles text with AI
       tags:
       - transcription
       x-openapi-router-controller: openapi_server.controllers.transcription_controller
-  /video:
-    delete:
-      operationId: video_delete
-      parameters:
-      - description: "Filename of the video to be deleted, if no filename, all uploaded\
-          \ videos are deleted"
-        explode: true
-        in: query
-        name: filename
-        required: false
-        schema:
-          type: string
-        style: form
-      responses:
-        "200":
-          description: A successful response
-      summary: Delete uploaded video file(s)
-      tags:
-      - video
-      x-openapi-router-controller: openapi_server.controllers.video_controller
-    get:
-      operationId: video_get
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                items:
-                  $ref: '#/components/schemas/_video_get_200_response_inner'
-                type: array
-          description: A successful response
-      summary: Retrieves the list of uploaded videos
-      tags:
-      - video
-      x-openapi-router-controller: openapi_server.controllers.video_controller
-    post:
-      operationId: video_post
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/_video_post_request'
-        required: true
-      responses:
-        "200":
-          description: A successful response
-      summary: Uploads a video file
-      tags:
-      - video
-      x-openapi-router-controller: openapi_server.controllers.video_controller
 components:
   schemas:
     JobInfo:
       example:
-        video_file: video_file
+        filename: filename
         config:
           speaker_detection: true
           subtitles_frequency: 0
-          hugging_face_token: hugging_face_token
           language: language
           model_size: model_size
       properties:
         config:
           $ref: '#/components/schemas/JobConfig'
-        video_file:
-          title: video_file
+        filename:
+          title: filename
           type: string
       title: JobInfo
       type: object
@@ -342,7 +639,6 @@ components:
       example:
         speaker_detection: true
         subtitles_frequency: 0
-        hugging_face_token: hugging_face_token
         language: language
         model_size: model_size
       properties:
@@ -358,11 +654,7 @@ components:
         speaker_detection:
           title: speaker_detection
           type: boolean
-        hugging_face_token:
-          title: hugging_face_token
-          type: string
       required:
-      - hugging_face_token
       - language
       - model_size
       - speaker_detection
@@ -371,21 +663,20 @@ components:
       type: object
     JobRequest:
       example:
-        video_file: video_file
+        filename: filename
         config:
           speaker_detection: true
           subtitles_frequency: 0
-          hugging_face_token: hugging_face_token
           language: language
           model_size: model_size
       properties:
-        video_file:
-          title: video_file
+        filename:
+          title: filename
           type: string
         config:
           $ref: '#/components/schemas/JobConfig'
       required:
-      - video_file
+      - filename
       title: JobRequest
       type: object
     JobResponse:
@@ -426,21 +717,20 @@ components:
             start: 5.962133916683182
             end: 5.637376656633329
             word: word
-        job_id: job_id
-        config:
-          video_file: video_file
+        id: id
+        info:
+          filename: filename
           config:
             speaker_detection: true
             subtitles_frequency: 0
-            hugging_face_token: hugging_face_token
             language: language
             model_size: model_size
         status: pending
       properties:
-        job_id:
-          title: job_id
+        id:
+          title: id
           type: string
-        config:
+        info:
           $ref: '#/components/schemas/JobInfo'
         status:
           enum:
@@ -454,10 +744,10 @@ components:
           $ref: '#/components/schemas/TranscriptionData'
       required:
       - config
-      - job_id
+      - data
+      - filename
+      - id
       - status
-      - transcription
-      - video_file
       title: JobResponse
       type: object
     Word:
@@ -523,9 +813,21 @@ components:
       - text
       title: Segment
       type: object
-    Transcription:
+    TranscriptionRequest:
+      properties:
+        data:
+          $ref: '#/components/schemas/TranscriptionData'
+        job_id:
+          title: job_id
+          type: string
+        filename:
+          title: filename
+          type: string
+      title: TranscriptionRequest
+      type: object
+    TranscriptionResponse:
       example:
-        transcription_id: transcription_id
+        filename: filename
         data:
           language: language
           segments:
@@ -563,20 +865,20 @@ components:
             end: 5.637376656633329
             word: word
         job_id: job_id
-        video_file: video_file
+        id: id
       properties:
-        transcription_id:
-          title: transcription_id
+        id:
+          title: id
           type: string
         data:
           $ref: '#/components/schemas/TranscriptionData'
         job_id:
           title: job_id
           type: string
-        video_file:
-          title: video_file
+        filename:
+          title: filename
           type: string
-      title: Transcription
+      title: TranscriptionResponse
       type: object
     TranscriptionData:
       example:
@@ -633,53 +935,61 @@ components:
       - segments
       title: TranscriptionData
       type: object
-    _transcription_post_request:
-      properties:
-        data:
-          $ref: '#/components/schemas/TranscriptionData'
-        job_id:
-          title: job_id
-          type: string
-        video_file:
-          title: video_file
-          type: string
-      title: _transcription_post_request
-      type: object
-    _transcription__transcription_id__patch_request:
-      properties:
-        data:
-          $ref: '#/components/schemas/TranscriptionData'
-      title: _transcription__transcription_id__patch_request
-      type: object
-    _transcription__transcription_id__export_get_400_response:
+    FileResponse:
       example:
-        error: Unsupported format
-      properties:
-        error:
-          example: Unsupported format
-          title: error
-          type: string
-      title: _transcription__transcription_id__export_get_400_response
-      type: object
-    _video_get_200_response_inner:
-      example:
-        video_name: video_name
-        video_id: video_id
+        filename: filename
+        video_url: video_url
+        image_url: image_url
+        id: id
         upload_date: 2000-01-23T04:56:07.000+00:00
       properties:
-        video_id:
-          title: video_id
+        id:
+          title: id
           type: string
-        video_name:
-          title: video_name
+        filename:
+          title: filename
           type: string
         upload_date:
           format: date-time
           title: upload_date
           type: string
-      title: _video_get_200_response_inner
+        video_url:
+          title: video_url
+          type: string
+        image_url:
+          title: image_url
+          type: string
+      title: FileResponse
       type: object
-    _video_post_request:
+    ErrorModel:
+      properties:
+        title:
+          title: title
+          type: string
+        detail:
+          title: detail
+          type: string
+        status:
+          title: status
+          type: integer
+        type:
+          title: type
+          type: string
+      title: ErrorModel
+      type: object
+    _transcription_post_request:
+      properties:
+        schema:
+          $ref: '#/components/schemas/TranscriptionRequest'
+      title: _transcription_post_request
+      type: object
+    _transcription__id__patch_request:
+      properties:
+        data:
+          $ref: '#/components/schemas/TranscriptionData'
+      title: _transcription__id__patch_request
+      type: object
+    _file_post_request:
       properties:
         file:
           format: binary

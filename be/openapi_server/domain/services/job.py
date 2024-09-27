@@ -14,6 +14,7 @@ class JobService:
         jobs = []
         for redis_job in redis_jobs:
             jobs.append(self._parse_job(redis_job))
+        return jobs
 
     def get(self, job_id) -> Job:
         redis_job = self.q.fetch_job(job_id)
@@ -27,9 +28,9 @@ class JobService:
         return redis_job.get_meta().get("info", {})
     
     def _parse_job(self, redis_job) -> Job:
-        job = {"job_id": redis_job.get_id(),
+        job = {"id": redis_job.get_id(),
                 "data": redis_job.result, 
-                "config": self._get_job_config(redis_job), 
+                "info": self._get_job_config(redis_job), 
                 "status": redis_job.get_status()}
         return Job(**job)
 

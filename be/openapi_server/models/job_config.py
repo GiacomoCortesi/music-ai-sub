@@ -12,7 +12,7 @@ class JobConfig(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, model_size=None, subtitles_frequency=None, language=None, speaker_detection=None, hugging_face_token=None):  # noqa: E501
+    def __init__(self, model_size=None, subtitles_frequency=None, language=None, speaker_detection=None):  # noqa: E501
         """JobConfig - a model defined in OpenAPI
 
         :param model_size: The model_size of this JobConfig.  # noqa: E501
@@ -23,30 +23,25 @@ class JobConfig(Model):
         :type language: str
         :param speaker_detection: The speaker_detection of this JobConfig.  # noqa: E501
         :type speaker_detection: bool
-        :param hugging_face_token: The hugging_face_token of this JobConfig.  # noqa: E501
-        :type hugging_face_token: str
         """
         self.openapi_types = {
             'model_size': str,
             'subtitles_frequency': int,
             'language': str,
-            'speaker_detection': bool,
-            'hugging_face_token': str
+            'speaker_detection': bool
         }
 
         self.attribute_map = {
             'model_size': 'model_size',
             'subtitles_frequency': 'subtitles_frequency',
             'language': 'language',
-            'speaker_detection': 'speaker_detection',
-            'hugging_face_token': 'hugging_face_token'
+            'speaker_detection': 'speaker_detection'
         }
 
         self._model_size = model_size
         self._subtitles_frequency = subtitles_frequency
         self._language = language
         self._speaker_detection = speaker_detection
-        self._hugging_face_token = hugging_face_token
 
     @classmethod
     def from_dict(cls, dikt) -> 'JobConfig':
@@ -150,26 +145,3 @@ class JobConfig(Model):
             raise ValueError("Invalid value for `speaker_detection`, must not be `None`")  # noqa: E501
 
         self._speaker_detection = speaker_detection
-
-    @property
-    def hugging_face_token(self) -> str:
-        """Gets the hugging_face_token of this JobConfig.
-
-
-        :return: The hugging_face_token of this JobConfig.
-        :rtype: str
-        """
-        return self._hugging_face_token
-
-    @hugging_face_token.setter
-    def hugging_face_token(self, hugging_face_token: str):
-        """Sets the hugging_face_token of this JobConfig.
-
-
-        :param hugging_face_token: The hugging_face_token of this JobConfig.
-        :type hugging_face_token: str
-        """
-        if hugging_face_token is None:
-            raise ValueError("Invalid value for `hugging_face_token`, must not be `None`")  # noqa: E501
-
-        self._hugging_face_token = hugging_face_token

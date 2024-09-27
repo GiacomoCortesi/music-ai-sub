@@ -21,8 +21,8 @@ class TranscriptionData(BaseModel):
     language: str
 
 class Transcription(BaseModel):
-    transcription_id: Optional[ID] = None
+    id: Optional[ID] = None
     data: TranscriptionData
     original_data: Optional[TranscriptionData] = None
-    job_id: ID
-    video_file: str
+    job_id: Optional[ID] = None
+    filename: Optional[str] = None

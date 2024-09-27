@@ -16,34 +16,34 @@ class JobResponse(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, job_id=None, config=None, status=None, data=None):  # noqa: E501
+    def __init__(self, id=None, info=None, status=None, data=None):  # noqa: E501
         """JobResponse - a model defined in OpenAPI
 
-        :param job_id: The job_id of this JobResponse.  # noqa: E501
-        :type job_id: str
-        :param config: The config of this JobResponse.  # noqa: E501
-        :type config: JobInfo
+        :param id: The id of this JobResponse.  # noqa: E501
+        :type id: str
+        :param info: The info of this JobResponse.  # noqa: E501
+        :type info: JobInfo
         :param status: The status of this JobResponse.  # noqa: E501
         :type status: str
         :param data: The data of this JobResponse.  # noqa: E501
         :type data: TranscriptionData
         """
         self.openapi_types = {
-            'job_id': str,
-            'config': JobInfo,
+            'id': str,
+            'info': JobInfo,
             'status': str,
             'data': TranscriptionData
         }
 
         self.attribute_map = {
-            'job_id': 'job_id',
-            'config': 'config',
+            'id': 'id',
+            'info': 'info',
             'status': 'status',
             'data': 'data'
         }
 
-        self._job_id = job_id
-        self._config = config
+        self._id = id
+        self._info = info
         self._status = status
         self._data = data
 
@@ -59,50 +59,48 @@ class JobResponse(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def job_id(self) -> str:
-        """Gets the job_id of this JobResponse.
+    def id(self) -> str:
+        """Gets the id of this JobResponse.
 
 
-        :return: The job_id of this JobResponse.
+        :return: The id of this JobResponse.
         :rtype: str
         """
-        return self._job_id
+        return self._id
 
-    @job_id.setter
-    def job_id(self, job_id: str):
-        """Sets the job_id of this JobResponse.
+    @id.setter
+    def id(self, id: str):
+        """Sets the id of this JobResponse.
 
 
-        :param job_id: The job_id of this JobResponse.
-        :type job_id: str
+        :param id: The id of this JobResponse.
+        :type id: str
         """
-        if job_id is None:
-            raise ValueError("Invalid value for `job_id`, must not be `None`")  # noqa: E501
+        if id is None:
+            raise ValueError("Invalid value for `id`, must not be `None`")  # noqa: E501
 
-        self._job_id = job_id
+        self._id = id
 
     @property
-    def config(self) -> JobInfo:
-        """Gets the config of this JobResponse.
+    def info(self) -> JobInfo:
+        """Gets the info of this JobResponse.
 
 
-        :return: The config of this JobResponse.
+        :return: The info of this JobResponse.
         :rtype: JobInfo
         """
-        return self._config
+        return self._info
 
-    @config.setter
-    def config(self, config: JobInfo):
-        """Sets the config of this JobResponse.
+    @info.setter
+    def info(self, info: JobInfo):
+        """Sets the info of this JobResponse.
 
 
-        :param config: The config of this JobResponse.
-        :type config: JobInfo
+        :param info: The info of this JobResponse.
+        :type info: JobInfo
         """
-        if config is None:
-            raise ValueError("Invalid value for `config`, must not be `None`")  # noqa: E501
 
-        self._config = config
+        self._info = info
 
     @property
     def status(self) -> str:
@@ -149,5 +147,7 @@ class JobResponse(Model):
         :param data: The data of this JobResponse.
         :type data: TranscriptionData
         """
+        if data is None:
+            raise ValueError("Invalid value for `data`, must not be `None`")  # noqa: E501
 
         self._data = data

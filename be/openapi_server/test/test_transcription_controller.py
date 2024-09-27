@@ -3,7 +3,7 @@ import unittest
 from flask import json
 from unittest.mock import MagicMock
 
-from openapi_server.models.transcription_post200_response import TranscriptionPost200Response  # noqa: E501
+from openapi_server.models.transcription_response import TranscriptionResponse  # noqa: E501
 from openapi_server.models.transcription_post_request import TranscriptionPostRequest  # noqa: E501
 from openapi_server.test import BaseTestCase
 from openapi_server.models.transcription_data import TranscriptionData as ApiTranscriptionData
@@ -43,7 +43,7 @@ class TestTranscriptionController(BaseTestCase):
 
         ts = self.app.config['transcription_service']
 
-        ts.get = MagicMock(return_value = DomainTranscription(transcription_id="dummy", data=DomainTranscriptionData(segments=[], word_segments=[], language="it"), job_id="dummy", video_file="dummy.mov"))
+        ts.get = MagicMock(return_value = DomainTranscription(id="dummy", data=DomainTranscriptionData(segments=[], word_segments=[], language="it"), job_id="dummy", filename="dummy.mov"))
         ts.edit = MagicMock(return_value = None)
  
         response = self.client.open(
@@ -98,7 +98,7 @@ class TestTranscriptionController(BaseTestCase):
         }
 
         ts = self.app.config["transcription_service"]
-        ts.get = MagicMock(return_value = DomainTranscription(transcription_id="dummy", data=DomainTranscriptionData(segments=[], word_segments=[], language="it"), job_id="dummy", video_file="dummy.mov"))
+        ts.get = MagicMock(return_value = DomainTranscription(id="dummy", data=DomainTranscriptionData(segments=[], word_segments=[], language="it"), job_id="dummy", filename="dummy.mov"))
 
         response = self.client.open(
             '/transcription/{transcription_id}'.format(transcription_id='transcription_id_example'),

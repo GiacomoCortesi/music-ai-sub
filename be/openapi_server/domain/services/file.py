@@ -121,13 +121,13 @@ class FileService:
 
         # store file metadata
         f_metadata = {
-            "video_name": str(filename),
+            "filename": str(filename),
             "video_path": str(file_path),
             "image_path": str(image_path),
             "video_url": f'/videos/{id}/{filename}',
             "image_url": f'/videos/{id}/{image_path.name}',
             "upload_date": datetime.now(),
-            "video_id": id,
+            "id": id,
         }
         self.repository.add(File(**f_metadata))
     

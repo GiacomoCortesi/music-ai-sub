@@ -716,6 +716,10 @@ components:
         upload_date:
           type: string
           format: date-time
+        video_url:
+          type: string
+        image_url:
+          type: string
     ErrorModel:
       type: object
       properties:

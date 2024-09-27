@@ -8,10 +8,14 @@ from openapi_server.models.job_response import JobResponse  # noqa: E501
 from openapi_server.test import BaseTestCase
 
 from openapi_server.domain.services.job import JobNotFoundException
+from openapi_server.domain.services.job import Job as DomainJob
+from openapi_server.domain.models.job import Config
+from openapi_server.mappers.mappers import JobMapper
 
 class TestJobController(BaseTestCase):
     """JobController integration test stubs"""
-
+    job_config_mock = {"speaker_detection":True,"subtitles_frequency":5,"language":"language","model_size":"model_size"}
+    job_mock = {"id": "test-job", "data": "", "info": {"filename": "somefile", "config": job_config_mock}, "status": "started"}
     def test_job_get(self):
         """Test case for job_get
 
@@ -24,7 +28,7 @@ class TestJobController(BaseTestCase):
 
         test_cases = [
             {"name": "no_jobs", "mock_return_value": [], "expected_result": []},
-            {"name": "with_jobs", "mock_return_value": [{"job_id": "test-job", "data": "", "config": {}, "status": "started"}], "expected_result": [{"job_id": "test-job", "data": "", "config": {}, "status": "started"}]}
+            {"name": "with_jobs", "mock_return_value": [DomainJob(**self.job_mock)], "expected_result": [self.job_mock]}
         ]
         for test_case in test_cases:
             with self.subTest(case=test_case):
@@ -37,8 +41,8 @@ class TestJobController(BaseTestCase):
                 self.assert200(response,
                             'Response body is : ' + response.data.decode('utf-8'))
 
-    def test_job_job_id_get(self):
-        """Test case for job_job_id_get
+    def test_job_id_get(self):
+        """Test case for job_id_get
 
         Get job details
         """
@@ -46,10 +50,10 @@ class TestJobController(BaseTestCase):
             'Accept': 'application/json',
         }
         js = self.app.config['job_service']
-        job_id = "test-job"
+        job_id = self.job_mock["id"]
         test_cases = [
             {"name": "job_id_does_not_exist", "mock_return_value": None, "expected_result": None, "mock_side_effect": JobNotFoundException()},
-            {"name": "job_id_exist", "mock_return_value": {"job_id": job_id, "data": "", "config": {}, "status": "started"}, "expected_result": {"job_id": job_id, "data": "", "config": {}, "status": "started"},"mock_side_effect": None}
+            {"name": "job_id_exist", "mock_return_value": DomainJob(**self.job_mock), "expected_result": self.job_mock,"mock_side_effect": None}
         ]
         for test_case in test_cases:
             with self.subTest(case=test_case):
@@ -69,7 +73,7 @@ class TestJobController(BaseTestCase):
 
         Create a new subtitles generation job
         """
-        job_request = {"video_file":"video_file","config":{"speaker_detection":True,"subtitles_frequency":5,"hugging_face_token":"hugging_face_token","language":"language","model_size":"model_size"}}
+        job_request = JobRequest(**{"filename":"file","config":self.job_config_mock})
         headers = { 
             'Accept': 'application/json',
             'Content-Type': 'application/json',
@@ -77,10 +81,7 @@ class TestJobController(BaseTestCase):
 
         js = self.app.config['job_service']
         
-        js.run = MagicMock(return_value = {"job_id": "job_id",
-                "data": {}, 
-                "config": {}, 
-                "status": "pending"})
+        js.run = MagicMock(return_value = DomainJob(**self.job_mock))
 
         response = self.client.open(
             '/job',

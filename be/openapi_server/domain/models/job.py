@@ -9,11 +9,11 @@ class Config(BaseModel):
     speaker_detection: bool
 
 class Info(BaseModel):
-    video_file: str
+    filename: str
     config: Config
 
 class Job(BaseModel):
-    job_id: ID
+    id: ID
     data: Any
-    config: Info
+    info: Info
     status: str

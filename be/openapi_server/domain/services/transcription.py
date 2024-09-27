@@ -20,7 +20,7 @@ class TranscriptionService:
     
     def add(self, transcription: Transcription):
         transcription_id = str(uuid.uuid4())
-        transcription.transcription_id = transcription_id
+        transcription.id = transcription_id
         transcription.original_data = copy.deepcopy(transcription.data)
         self.repository.add(transcription)
     

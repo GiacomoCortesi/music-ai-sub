@@ -3,7 +3,6 @@ from typing import Dict
 from typing import Tuple
 from typing import Union
 
-from openapi_server.models.video_get200_response_inner import VideoGet200ResponseInner  # noqa: E501
 from openapi_server.domain.services.file import InvalidFileException
 from openapi_server.mappers.mappers import FileMapper
 from openapi_server import util
@@ -13,8 +12,8 @@ from connexion.problem import problem
 from flask import current_app
 from flask import request
 
-def video_delete(filename=None):  # noqa: E501
-    """Delete uploaded video file(s)
+def file_delete(filename=None):  # noqa: E501
+    """Delete uploaded file(s)
 
      # noqa: E501
 
@@ -27,10 +26,9 @@ def video_delete(filename=None):  # noqa: E501
         current_app.config['file_service'].delete(filename)
     else:
         current_app.config['file_service'].delete_all()
-    return {'success': True}, 204
 
-def video_get():  # noqa: E501
-    """Retrieves the list of uploaded videos
+def file_get():  # noqa: E501
+    """Retrieves the list of uploaded files
 
      # noqa: E501
 
@@ -40,8 +38,8 @@ def video_get():  # noqa: E501
     video_files = current_app.config['file_service'].get_all()
     return [FileMapper.map_to_api(domain_file) for domain_file in video_files]
 
-def video_post(f=None):  # noqa: E501
-    """Uploads a video file
+def file_post(f=None):  # noqa: E501
+    """Uploads a audio or video file
 
      # noqa: E501
 
@@ -61,5 +59,3 @@ def video_post(f=None):  # noqa: E501
         current_app.config['file_service'].add(Path(f.filename), f.stream)
     except InvalidFileException:
         return problem(title="BadRequest", detail="Unsupported file format", status=400)
-    
-    return {'success': True}, 200

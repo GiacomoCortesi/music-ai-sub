@@ -14,25 +14,25 @@ class JobRequest(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, video_file=None, config=None):  # noqa: E501
+    def __init__(self, filename=None, config=None):  # noqa: E501
         """JobRequest - a model defined in OpenAPI
 
-        :param video_file: The video_file of this JobRequest.  # noqa: E501
-        :type video_file: str
+        :param filename: The filename of this JobRequest.  # noqa: E501
+        :type filename: str
         :param config: The config of this JobRequest.  # noqa: E501
         :type config: JobConfig
         """
         self.openapi_types = {
-            'video_file': str,
+            'filename': str,
             'config': JobConfig
         }
 
         self.attribute_map = {
-            'video_file': 'video_file',
+            'filename': 'filename',
             'config': 'config'
         }
 
-        self._video_file = video_file
+        self._filename = filename
         self._config = config
 
     @classmethod
@@ -47,27 +47,27 @@ class JobRequest(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def video_file(self) -> str:
-        """Gets the video_file of this JobRequest.
+    def filename(self) -> str:
+        """Gets the filename of this JobRequest.
 
 
-        :return: The video_file of this JobRequest.
+        :return: The filename of this JobRequest.
         :rtype: str
         """
-        return self._video_file
+        return self._filename
 
-    @video_file.setter
-    def video_file(self, video_file: str):
-        """Sets the video_file of this JobRequest.
+    @filename.setter
+    def filename(self, filename: str):
+        """Sets the filename of this JobRequest.
 
 
-        :param video_file: The video_file of this JobRequest.
-        :type video_file: str
+        :param filename: The filename of this JobRequest.
+        :type filename: str
         """
-        if video_file is None:
-            raise ValueError("Invalid value for `video_file`, must not be `None`")  # noqa: E501
+        if filename is None:
+            raise ValueError("Invalid value for `filename`, must not be `None`")  # noqa: E501
 
-        self._video_file = video_file
+        self._filename = filename
 
     @property
     def config(self) -> JobConfig:

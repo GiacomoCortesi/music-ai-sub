@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import TypeVar, Generic
-from openapi_server.models.transcription import Transcription as ApiTranscription
+from openapi_server.models.transcription_response import TranscriptionResponse as ApiTranscription
 from openapi_server.domain.models.transcription import Transcription as DomainTranscription
-from openapi_server.models.video_get200_response_inner import VideoGet200ResponseInner as ApiFile
+from openapi_server.models.file_response import FileResponse as ApiFile
 from openapi_server.domain.models.file import File as DomainFile
 from openapi_server.domain.models.job import Job as DomainJob
 from openapi_server.models.job_response import JobResponse as ApiJob
@@ -36,7 +36,7 @@ class FileMapper(Mapper[ApiFile, DomainFile]):
 
     @classmethod
     def map_to_api(self, source: DomainFile) -> ApiFile:
-        return ApiFile(video_id=source.video_id, video_name=source.video_name, upload_date=source.upload_date)
+        return ApiFile(id=source.id, filename=source.filename, upload_date=source.upload_date)
 
 class JobMapper(Mapper[ApiJob, DomainJob]):
     @classmethod

@@ -14,26 +14,26 @@ class JobInfo(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, config=None, video_file=None):  # noqa: E501
+    def __init__(self, config=None, filename=None):  # noqa: E501
         """JobInfo - a model defined in OpenAPI
 
         :param config: The config of this JobInfo.  # noqa: E501
         :type config: JobConfig
-        :param video_file: The video_file of this JobInfo.  # noqa: E501
-        :type video_file: str
+        :param filename: The filename of this JobInfo.  # noqa: E501
+        :type filename: str
         """
         self.openapi_types = {
             'config': JobConfig,
-            'video_file': str
+            'filename': str
         }
 
         self.attribute_map = {
             'config': 'config',
-            'video_file': 'video_file'
+            'filename': 'filename'
         }
 
         self._config = config
-        self._video_file = video_file
+        self._filename = filename
 
     @classmethod
     def from_dict(cls, dikt) -> 'JobInfo':
@@ -68,22 +68,22 @@ class JobInfo(Model):
         self._config = config
 
     @property
-    def video_file(self) -> str:
-        """Gets the video_file of this JobInfo.
+    def filename(self) -> str:
+        """Gets the filename of this JobInfo.
 
 
-        :return: The video_file of this JobInfo.
+        :return: The filename of this JobInfo.
         :rtype: str
         """
-        return self._video_file
+        return self._filename
 
-    @video_file.setter
-    def video_file(self, video_file: str):
-        """Sets the video_file of this JobInfo.
+    @filename.setter
+    def filename(self, filename: str):
+        """Sets the filename of this JobInfo.
 
 
-        :param video_file: The video_file of this JobInfo.
-        :type video_file: str
+        :param filename: The filename of this JobInfo.
+        :type filename: str
         """
 
-        self._video_file = video_file
+        self._filename = filename

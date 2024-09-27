@@ -19,9 +19,9 @@ class InMemoryFileRepository(FileRepository):
         return self.files.get(id, None)
 
     def add(self, f: File) -> None:
-        if not f.video_id:
-            f.video_id = str(uuid.uuid())
-        self.files[f.video_name] = f
+        if not f.id:
+            f.id = str(uuid.uuid())
+        self.files[f.filename] = f
     
     def delete(self, id: ID) -> None:
         self.files.pop(id, None)
@@ -30,4 +30,4 @@ class InMemoryFileRepository(FileRepository):
         self.files = {}
     
     def update(self, f: File) -> None:
-        self.files[f.video_name] = f
+        self.files[f.filename] = f
